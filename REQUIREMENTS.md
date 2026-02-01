@@ -22,11 +22,36 @@ Spring AIの学習を目的としたシンプルなTodoアプリケーション�
 
 ## プロジェクト構成
 
+### ディレクトリ構造
+
+プロジェクトはフロントエンドとバックエンドを明確に分離したディレクトリ構成とする：
+
+```
+learn_spring_ai/
+├── backend/                    # バックエンド（Gradleマルチプロジェクト）
+│   ├── settings.gradle.kts     # マルチプロジェクト設定
+│   ├── build.gradle.kts        # ルートプロジェクトビルド設定
+│   ├── todo-domain/            # ドメイン層モジュール
+│   │   ├── build.gradle.kts
+│   │   └── src/
+│   │       ├── main/kotlin/com/example/todo/
+│   │       └── test/kotlin/com/example/todo/
+│   └── todo-api/               # API層モジュール
+│       ├── build.gradle.kts
+│       └── src/
+│           ├── main/kotlin/com/example/todo/
+│           └── test/kotlin/com/example/todo/
+└── frontend/                   # フロントエンド（React + TypeScript）
+    ├── package.json
+    ├── tsconfig.json
+    └── src/
+```
+
 ### バックエンド：Gradleマルチプロジェクト構成
 
-バックエンドは将来のMCPサーバー実装を見据えて、以下の2つのモジュールに分離する：
+`backend/`ディレクトリ内で、将来のMCPサーバー実装を見据えて、以下の2つのモジュールに分離する：
 
-#### 1. `todo-domain` モジュール
+#### 1. `backend/todo-domain` モジュール
 ドメインロジックとデータアクセス層を担当する再利用可能なライブラリモジュール。
 
 **責務：**
@@ -37,16 +62,16 @@ Spring AIの学習を目的としたシンプルなTodoアプリケーション�
 - ドメインに関する例外クラス
 
 **主要コンポーネント：**
-- `domain/model/`: エンティティクラス（User, Todo）
-- `domain/repository/`: Repositoryインターフェース
-- `domain/service/`: ビジネスロジック層
+- `src/main/kotlin/com/example/todo/domain/model/`: エンティティクラス（User, Todo）
+- `src/main/kotlin/com/example/todo/domain/repository/`: Repositoryインターフェース
+- `src/main/kotlin/com/example/todo/domain/service/`: ビジネスロジック層
 
 **依存関係：**
 - Spring Data JPA
 - H2 Database
 - Kotlin標準ライブラリ
 
-#### 2. `todo-api` モジュール
+#### 2. `backend/todo-api` モジュール
 REST APIを提供するWebアプリケーションモジュール。
 
 **責務：**
@@ -58,10 +83,10 @@ REST APIを提供するWebアプリケーションモジュール。
 - アプリケーション起動クラス
 
 **主要コンポーネント：**
-- `api/controller/`: REST Controllerクラス
-- `api/dto/`: リクエスト/レスポンスDTO
-- `api/security/`: セキュリティ設定、JWTユーティリティ
-- `api/config/`: 各種設定クラス
+- `src/main/kotlin/com/example/todo/api/controller/`: REST Controllerクラス
+- `src/main/kotlin/com/example/todo/api/dto/`: リクエスト/レスポンスDTO
+- `src/main/kotlin/com/example/todo/api/security/`: セキュリティ設定、JWTユーティリティ
+- `src/main/kotlin/com/example/todo/api/config/`: 各種設定クラス
 
 **依存関係：**
 - `todo-domain`モジュール（依存）
@@ -77,13 +102,24 @@ todo-api → todo-domain
 `todo-api`は`todo-domain`に依存し、ドメインロジックを利用してREST APIを提供する。
 `todo-domain`は他のモジュールに依存せず、独立したライブラリとして機能する。
 
+### フロントエンド：React + TypeScript
+
+`frontend/`ディレクトリ内にReact + TypeScriptプロジェクトを配置する。
+
+**主要ディレクトリ：**
+- `src/components/`: Reactコンポーネント
+- `src/pages/`: ページコンポーネント
+- `src/api/`: APIクライアント
+- `src/types/`: TypeScript型定義
+- `src/hooks/`: カスタムフック
+
 ### 将来の拡張：MCPサーバー
 
-将来的に`todo-mcp`モジュールを追加し、`todo-domain`を再利用してMCP (Model Context Protocol) サーバーを実装する予定。
+将来的に`backend/todo-mcp`モジュールを追加し、`todo-domain`を再利用してMCP (Model Context Protocol) サーバーを実装する予定。
 
 ```
-todo-api → todo-domain
-todo-mcp → todo-domain
+backend/todo-api → backend/todo-domain
+backend/todo-mcp → backend/todo-domain
 ```
 
 これにより、同じドメインロジックを異なるインターフェース（REST API、MCP）で提供可能になる。
