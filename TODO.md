@@ -50,8 +50,8 @@
 
 ## フェーズ7: テストとリファイニング
 
-- [ ] `backend/todo-domain`: ユニットテスト
-- [ ] `backend/todo-api`: 統合テスト
-- [ ] `frontend/`: コンポーネントテスト
-- [ ] バグ修正
-- [ ] UI/UX改善
+- [x] `backend/todo-domain`: ユニットテスト
+- [x] `backend/todo-api`: 統合テスト
+- [x] `frontend/`: コンポーネントテスト
+- [x] バグ修正
+- [x] UI/UX改善
