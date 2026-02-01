@@ -89,4 +89,85 @@ class TodoService(
     fun findAll(): List<Todo> {
         return todoRepository.findAll()
     }
+
+    fun findWithFiltersAndSort(
+        user: User,
+        filter: TodoFilter = TodoFilter(),
+        sort: TodoSort = TodoSort()
+    ): List<Todo> {
+        // まずユーザーの全Todoを取得
+        var todos = todoRepository.findByUser(user)
+
+        // フィルタリング
+        filter.completed?.let { completed ->
+            todos = todos.filter { it.completed == completed }
+        }
+
+        filter.dueDateFrom?.let { from ->
+            todos = todos.filter { todo ->
+                val dueDate = todo.dueDate
+                dueDate != null && !dueDate.isBefore(from)
+            }
+        }
+
+        filter.dueDateTo?.let { to ->
+            todos = todos.filter { todo ->
+                val dueDate = todo.dueDate
+                dueDate != null && !dueDate.isAfter(to)
+            }
+        }
+
+        filter.keyword?.let { keyword ->
+            todos = todos.filter { it.title.contains(keyword, ignoreCase = true) }
+        }
+
+        filter.hasNoDueDate?.let { hasNoDueDate ->
+            if (hasNoDueDate) {
+                todos = todos.filter { it.dueDate == null }
+            } else {
+                todos = todos.filter { it.dueDate != null }
+            }
+        }
+
+        // ソート
+        todos = when (sort.field) {
+            TodoSortField.TITLE -> {
+                if (sort.direction == SortDirection.ASC) {
+                    todos.sortedBy { it.title }
+                } else {
+                    todos.sortedByDescending { it.title }
+                }
+            }
+            TodoSortField.DUE_DATE -> {
+                if (sort.direction == SortDirection.ASC) {
+                    todos.sortedWith(compareBy(nullsLast()) { it.dueDate })
+                } else {
+                    todos.sortedWith(compareByDescending(nullsLast()) { it.dueDate })
+                }
+            }
+            TodoSortField.CREATED_AT -> {
+                if (sort.direction == SortDirection.ASC) {
+                    todos.sortedBy { it.createdAt }
+                } else {
+                    todos.sortedByDescending { it.createdAt }
+                }
+            }
+            TodoSortField.UPDATED_AT -> {
+                if (sort.direction == SortDirection.ASC) {
+                    todos.sortedBy { it.updatedAt }
+                } else {
+                    todos.sortedByDescending { it.updatedAt }
+                }
+            }
+            TodoSortField.COMPLETED -> {
+                if (sort.direction == SortDirection.ASC) {
+                    todos.sortedBy { it.completed }
+                } else {
+                    todos.sortedByDescending { it.completed }
+                }
+            }
+        }
+
+        return todos
+    }
 }

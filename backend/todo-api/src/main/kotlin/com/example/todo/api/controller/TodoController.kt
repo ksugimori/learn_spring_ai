@@ -3,13 +3,14 @@ package com.example.todo.api.controller
 import com.example.todo.api.dto.TodoRequest
 import com.example.todo.api.dto.TodoResponse
 import com.example.todo.api.dto.TodoUpdateRequest
-import com.example.todo.domain.service.TodoService
-import com.example.todo.domain.service.UserService
+import com.example.todo.domain.service.*
 import jakarta.validation.Valid
+import org.springframework.format.annotation.DateTimeFormat
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.security.core.Authentication
 import org.springframework.web.bind.annotation.*
+import java.time.LocalDate
 
 @RestController
 @RequestMapping("/api/todos")
@@ -19,11 +20,45 @@ class TodoController(
 ) {
 
     @GetMapping
-    fun getAllTodos(authentication: Authentication): ResponseEntity<List<TodoResponse>> {
+    fun getAllTodos(
+        @RequestParam(required = false) completed: Boolean?,
+        @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) dueDateFrom: LocalDate?,
+        @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) dueDateTo: LocalDate?,
+        @RequestParam(required = false) keyword: String?,
+        @RequestParam(required = false) hasNoDueDate: Boolean?,
+        @RequestParam(required = false, defaultValue = "CREATED_AT") sortBy: String?,
+        @RequestParam(required = false, defaultValue = "DESC") sortDirection: String?,
+        authentication: Authentication
+    ): ResponseEntity<List<TodoResponse>> {
         val user = userService.findByUsername(authentication.name)
             ?: return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build()
 
-        val todos = todoService.findByUser(user)
+        // フィルタ条件の構築
+        val filter = TodoFilter(
+            completed = completed,
+            dueDateFrom = dueDateFrom,
+            dueDateTo = dueDateTo,
+            keyword = keyword,
+            hasNoDueDate = hasNoDueDate
+        )
+
+        // ソート条件の構築
+        val sortField = try {
+            TodoSortField.valueOf(sortBy ?: "CREATED_AT")
+        } catch (e: IllegalArgumentException) {
+            TodoSortField.CREATED_AT
+        }
+
+        val direction = try {
+            SortDirection.valueOf(sortDirection ?: "DESC")
+        } catch (e: IllegalArgumentException) {
+            SortDirection.DESC
+        }
+
+        val sort = TodoSort(field = sortField, direction = direction)
+
+        // フィルタ・ソート適用
+        val todos = todoService.findWithFiltersAndSort(user, filter, sort)
         val response = todos.map { TodoResponse.from(it) }
 
         return ResponseEntity.ok(response)

@@ -35,8 +35,8 @@
 
 ## フェーズ5: 検索・フィルタ・ソート機能
 
-- [ ] `backend/todo-domain`: TodoServiceに検索・フィルタ・ソートロジック追加
-- [ ] `backend/todo-api`: TodoControllerにクエリパラメータ対応追加
+- [x] `backend/todo-domain`: TodoServiceに検索・フィルタ・ソートロジック追加
+- [x] `backend/todo-api`: TodoControllerにクエリパラメータ対応追加
 
 ## フェーズ6: フロントエンド開発（`frontend/`）
 
