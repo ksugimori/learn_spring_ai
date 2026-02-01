@@ -40,13 +40,13 @@
 
 ## フェーズ6: フロントエンド開発（`frontend/`）
 
-- [ ] React + TypeScriptプロジェクトセットアップ（Vite等）
-- [ ] APIクライアント実装（`src/api/`）
-- [ ] TypeScript型定義（`src/types/`）
-- [ ] ログイン・登録画面（`src/pages/`、`src/components/`）
-- [ ] Todoリスト画面（`src/pages/`、`src/components/`）
-- [ ] CRUD操作の実装
-- [ ] 検索・フィルタUI
+- [x] React + TypeScriptプロジェクトセットアップ（Vite等）
+- [x] APIクライアント実装（`src/api/`）
+- [x] TypeScript型定義（`src/types/`）
+- [x] ログイン・登録画面（`src/pages/`、`src/components/`）
+- [x] Todoリスト画面（`src/pages/`、`src/components/`）
+- [x] CRUD操作の実装
+- [x] 検索・フィルタUI
 
 ## フェーズ7: テストとリファイニング
 
