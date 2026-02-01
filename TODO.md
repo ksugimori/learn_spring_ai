@@ -14,10 +14,10 @@
 
 ## フェーズ2: ドメイン層の実装（`backend/todo-domain`）
 
-- [ ] UserエンティティとRepository（`domain/model/User.kt`、`domain/repository/UserRepository.kt`）
-- [ ] TodoエンティティとRepository（`domain/model/Todo.kt`、`domain/repository/TodoRepository.kt`）
-- [ ] UserServiceの実装（`domain/service/UserService.kt`）
-- [ ] TodoServiceの実装（基本CRUD）（`domain/service/TodoService.kt`）
+- [x] UserエンティティとRepository（`domain/model/User.kt`、`domain/repository/UserRepository.kt`）
+- [x] TodoエンティティとRepository（`domain/model/Todo.kt`、`domain/repository/TodoRepository.kt`）
+- [x] UserServiceの実装（`domain/service/UserService.kt`）
+- [x] TodoServiceの実装（基本CRUD）（`domain/service/TodoService.kt`）
 
 ## フェーズ3: API層と認証機能（`backend/todo-api`）
 

@@ -34,6 +34,11 @@ subprojects {
         testImplementation("org.springframework.boot:spring-boot-starter-test")
     }
 
+    tasks.withType<JavaCompile> {
+        sourceCompatibility = "17"
+        targetCompatibility = "17"
+    }
+
     tasks.withType<KotlinCompile> {
         kotlinOptions {
             freeCompilerArgs += "-Xjsr305=strict"
