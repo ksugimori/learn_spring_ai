@@ -29,9 +29,9 @@
 
 ## フェーズ4: Todo REST API実装（`backend/todo-api`）
 
-- [ ] TodoController実装（`api/controller/TodoController.kt`）
-- [ ] Todo用DTO（`api/dto/TodoRequest.kt`、`api/dto/TodoResponse.kt`等）
-- [ ] 基本的なCRUD API実装
+- [x] TodoController実装（`api/controller/TodoController.kt`）
+- [x] Todo用DTO（`api/dto/TodoRequest.kt`、`api/dto/TodoResponse.kt`等）
+- [x] 基本的なCRUD API実装
 
 ## フェーズ5: 検索・フィルタ・ソート機能
 

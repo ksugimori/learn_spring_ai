@@ -25,6 +25,17 @@ spring:
       hibernate:
         format_sql: true
 
+  # Jackson Configuration
+  jackson:
+    serialization:
+      write-dates-as-timestamps: false
+    time-zone: Asia/Tokyo
+
+# JWT Configuration
+jwt:
+  secret: mySecretKeyForJwtTokenGenerationAndValidationPurposeThisIsALongEnoughSecret
+  expiration: 86400000
+
 # Server Configuration
 server:
   port: 8080
@@ -33,5 +44,6 @@ server:
 logging:
   level:
     com.example.todo: DEBUG
+    org.springframework.security: DEBUG
     org.hibernate.SQL: DEBUG
     org.hibernate.type.descriptor.sql.BasicBinder: TRACE
