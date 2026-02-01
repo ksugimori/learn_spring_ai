@@ -4,13 +4,13 @@
 
 ## フェーズ1: バックエンド基盤構築（マルチプロジェクト設定）
 
-- [ ] ディレクトリ構造の作成（`backend/`、`frontend/`）
-- [ ] `backend/settings.gradle.kts`でマルチプロジェクト設定
-- [ ] `backend/build.gradle.kts`（ルートプロジェクト設定）
-- [ ] `backend/todo-domain`モジュール作成
-- [ ] `backend/todo-api`モジュール作成
-- [ ] 各モジュールの`build.gradle.kts`設定
-- [ ] H2データベース設定
+- [x] ディレクトリ構造の作成（`backend/`、`frontend/`）
+- [x] `backend/settings.gradle.kts`でマルチプロジェクト設定
+- [x] `backend/build.gradle.kts`（ルートプロジェクト設定）
+- [x] `backend/todo-domain`モジュール作成
+- [x] `backend/todo-api`モジュール作成
+- [x] 各モジュールの`build.gradle.kts`設定
+- [x] H2データベース設定
 
 ## フェーズ2: ドメイン層の実装（`backend/todo-domain`）
 
