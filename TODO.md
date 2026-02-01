@@ -21,11 +21,11 @@
 
 ## フェーズ3: API層と認証機能（`backend/todo-api`）
 
-- [ ] Spring Boot起動クラス（`TodoApplication.kt`）
-- [ ] Spring Security設定（`api/config/SecurityConfig.kt`）
-- [ ] JWT認証実装（`api/security/JwtTokenProvider.kt`等）
-- [ ] 認証用DTO（`api/dto/LoginRequest.kt`、`api/dto/RegisterRequest.kt`等）
-- [ ] AuthController（`api/controller/AuthController.kt`）
+- [x] Spring Boot起動クラス（`TodoApplication.kt`）
+- [x] Spring Security設定（`api/config/SecurityConfig.kt`）
+- [x] JWT認証実装（`api/security/JwtTokenProvider.kt`等）
+- [x] 認証用DTO（`api/dto/LoginRequest.kt`、`api/dto/RegisterRequest.kt`等）
+- [x] AuthController（`api/controller/AuthController.kt`）
 
 ## フェーズ4: Todo REST API実装（`backend/todo-api`）
 

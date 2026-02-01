@@ -3,11 +3,15 @@ plugins {
     id("io.spring.dependency-management")
     kotlin("jvm")
     kotlin("plugin.spring")
+    kotlin("plugin.jpa")
 }
 
 dependencies {
     // todo-domain モジュールへの依存
     implementation(project(":todo-domain"))
+
+    // Spring Data JPA (for annotations and configuration)
+    implementation("org.springframework.boot:spring-boot-starter-data-jpa")
 
     // Spring Boot Web
     implementation("org.springframework.boot:spring-boot-starter-web")
