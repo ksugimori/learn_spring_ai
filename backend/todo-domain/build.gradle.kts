@@ -1,9 +1,8 @@
 plugins {
-    id("org.springframework.boot") version "3.2.2"
-    id("io.spring.dependency-management")
-    kotlin("jvm")
-    kotlin("plugin.spring")
-    kotlin("plugin.jpa")
+    kotlin("jvm") version "1.9.25"
+    kotlin("plugin.spring") version "1.9.25"
+    id("org.springframework.boot") version "3.5.10"
+    id("io.spring.dependency-management") version "1.1.7"
 }
 
 // ライブラリモジュールとして使用するため、bootJarを無効化
