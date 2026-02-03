@@ -26,10 +26,11 @@ spring:
     database-platform: org.hibernate.dialect.H2Dialect
     hibernate:
       ddl-auto: create-drop
-    show-sql: true
+    show-sql: false
     properties:
       hibernate:
-        format_sql: true
+        format_sql: false
+        highlight_sql: false
 
   # Jackson Configuration
   jackson:
@@ -49,3 +50,6 @@ server:
 logging:
   level:
     root: ERROR # ログが標準出力に混ざるのを防ぐ
+    org.hibernate: ERROR             # Hibernate関連を黙らせる
+    org.hibernate.SQL: ERROR         # SQLログを黙らせる
+    org.hibernate.type.descriptor.sql: ERROR
