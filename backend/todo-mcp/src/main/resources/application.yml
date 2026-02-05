@@ -5,6 +5,9 @@ spring:
     mcp:
       server:
         transport: stdio
+        type: SYNC
+        annotation-scanner:
+          enabled: true
   main:
     banner-mode: "off"
 
