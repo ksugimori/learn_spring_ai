@@ -11,7 +11,7 @@ backend/
 │       └── service/         # UserService.kt, TodoService.kt, TodoFilter.kt, TodoSort.kt
 └── todo-api/                # API層
     └── src/main/kotlin/com/example/todo/
-        ├── TodoApplication.kt
+        ├── TodoApiApplication.kt
         └── api/
             ├── config/      # SecurityConfig.kt, GlobalExceptionHandler.kt
             ├── controller/  # AuthController.kt, TodoController.kt

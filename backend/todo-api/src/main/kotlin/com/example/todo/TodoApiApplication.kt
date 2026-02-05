@@ -8,8 +8,8 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories
 @SpringBootApplication(scanBasePackages = ["com.example.todo"])
 @EnableJpaRepositories(basePackages = ["com.example.todo.domain.repository"])
 @EntityScan(basePackages = ["com.example.todo.domain.model"])
-class TodoApplication
+class TodoApiApplication
 
 fun main(args: Array<String>) {
-    runApplication<TodoApplication>(*args)
+    runApplication<TodoApiApplication>(*args)
 }
