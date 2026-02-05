@@ -16,6 +16,15 @@ allprojects {
     }
 }
 
+// ルートプロジェクトではbootJarを無効化（メインクラスが存在しないため）
+tasks.named<org.springframework.boot.gradle.tasks.bundling.BootJar>("bootJar") {
+    enabled = false
+}
+
+tasks.named<Jar>("jar") {
+    enabled = true
+}
+
 subprojects {
     apply(plugin = "org.jetbrains.kotlin.jvm")
     apply(plugin = "io.spring.dependency-management")
