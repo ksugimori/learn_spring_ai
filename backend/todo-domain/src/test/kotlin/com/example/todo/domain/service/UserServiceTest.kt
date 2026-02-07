@@ -10,7 +10,6 @@ import org.mockito.Mockito.*
 import java.util.*
 
 class UserServiceTest {
-
     private lateinit var userRepository: UserRepository
     private lateinit var userService: UserService
 

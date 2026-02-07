@@ -9,12 +9,26 @@ import java.time.LocalDate
 
 interface TodoJpaRepository : JpaRepository<TodoEntity, Long> {
     fun findByUser(user: UserEntity): List<TodoEntity>
-    fun findByUserAndCompleted(user: UserEntity, completed: Boolean): List<TodoEntity>
-    fun findByUserAndTitleContaining(user: UserEntity, keyword: String): List<TodoEntity>
+
+    fun findByUserAndCompleted(
+        user: UserEntity,
+        completed: Boolean,
+    ): List<TodoEntity>
+
+    fun findByUserAndTitleContaining(
+        user: UserEntity,
+        keyword: String,
+    ): List<TodoEntity>
 
     @Query("SELECT t FROM TodoEntity t WHERE t.user = :user AND t.dueDate < :date AND t.completed = false")
-    fun findOverdueTodos(@Param("user") user: UserEntity, @Param("date") date: LocalDate): List<TodoEntity>
+    fun findOverdueTodos(
+        @Param("user") user: UserEntity,
+        @Param("date") date: LocalDate,
+    ): List<TodoEntity>
 
     @Query("SELECT t FROM TodoEntity t WHERE t.user = :user AND t.dueDate = :date")
-    fun findTodosByDueDate(@Param("user") user: UserEntity, @Param("date") date: LocalDate): List<TodoEntity>
+    fun findTodosByDueDate(
+        @Param("user") user: UserEntity,
+        @Param("date") date: LocalDate,
+    ): List<TodoEntity>
 }

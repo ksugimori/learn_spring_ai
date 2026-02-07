@@ -8,7 +8,7 @@ import org.springframework.transaction.annotation.Transactional
 @Service
 @Transactional(readOnly = true)
 class UserService(
-    private val userRepository: UserRepository
+    private val userRepository: UserRepository,
 ) {
     fun findById(id: Long): User? {
         return userRepository.findById(id)
@@ -23,14 +23,17 @@ class UserService(
     }
 
     @Transactional
-    fun createUser(username: String, encodedPassword: String): User {
+    fun createUser(
+        username: String,
+        encodedPassword: String,
+    ): User {
         if (existsByUsername(username)) {
             throw IllegalArgumentException("Username already exists: $username")
         }
 
         val user = User(
             username = username,
-            password = encodedPassword
+            password = encodedPassword,
         )
 
         return userRepository.save(user)

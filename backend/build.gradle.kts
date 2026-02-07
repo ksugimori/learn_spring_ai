@@ -5,6 +5,7 @@ plugins {
     kotlin("plugin.spring") version "1.9.25"
     id("org.springframework.boot") version "3.5.10"
     id("io.spring.dependency-management") version "1.1.7"
+    id("org.jlleitschuh.gradle.ktlint") version "12.1.0"
 }
 
 allprojects {
@@ -28,6 +29,18 @@ tasks.named<Jar>("jar") {
 subprojects {
     apply(plugin = "org.jetbrains.kotlin.jvm")
     apply(plugin = "io.spring.dependency-management")
+    apply(plugin = "org.jlleitschuh.gradle.ktlint")
+
+    configure<org.jlleitschuh.gradle.ktlint.KtlintExtension> {
+        version.set("1.1.1")
+        verbose.set(true)
+        outputToConsole.set(true)
+        coloredOutput.set(true)
+        reporters {
+            reporter(org.jlleitschuh.gradle.ktlint.reporter.ReporterType.CHECKSTYLE)
+            reporter(org.jlleitschuh.gradle.ktlint.reporter.ReporterType.PLAIN)
+        }
+    }
 
     dependencies {
         val implementation by configurations

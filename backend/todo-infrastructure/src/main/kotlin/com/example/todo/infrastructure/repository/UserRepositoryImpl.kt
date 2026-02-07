@@ -9,9 +9,8 @@ import org.springframework.stereotype.Repository
 @Repository
 class UserRepositoryImpl(
     private val jpaRepository: UserJpaRepository,
-    private val mapper: UserMapper
+    private val mapper: UserMapper,
 ) : UserRepository {
-
     override fun findById(id: Long): User? {
         return jpaRepository.findById(id)
             .map { mapper.toDomain(it) }

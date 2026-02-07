@@ -18,7 +18,6 @@ import java.time.LocalDate
 @SpringBootTest
 @AutoConfigureMockMvc
 class TodoControllerTest {
-
     @Autowired
     private lateinit var mockMvc: MockMvc
 
@@ -30,11 +29,12 @@ class TodoControllerTest {
     @BeforeEach
     fun setup() {
         // Register and get token
-        val registerRequest = RegisterRequest(username = "todouser_${System.currentTimeMillis()}", password = "password123")
+        val registerRequest =
+            RegisterRequest(username = "todouser_${System.currentTimeMillis()}", password = "password123")
         val result = mockMvc.perform(
             post("/api/auth/register")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(registerRequest))
+                .content(objectMapper.writeValueAsString(registerRequest)),
         )
             .andExpect(status().isCreated)
             .andReturn()
@@ -47,7 +47,7 @@ class TodoControllerTest {
     fun `getAllTodos should return empty list initially`() {
         mockMvc.perform(
             get("/api/todos")
-                .header("Authorization", "Bearer $authToken")
+                .header("Authorization", "Bearer $authToken"),
         )
             .andExpect(status().isOk)
             .andExpect(jsonPath("$").isArray)
@@ -62,7 +62,7 @@ class TodoControllerTest {
             post("/api/todos")
                 .header("Authorization", "Bearer $authToken")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(request))
+                .content(objectMapper.writeValueAsString(request)),
         )
             .andExpect(status().isCreated)
             .andExpect(jsonPath("$.title").value("Test Todo"))
@@ -77,7 +77,7 @@ class TodoControllerTest {
             post("/api/todos")
                 .header("Authorization", "Bearer $authToken")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(createRequest))
+                .content(objectMapper.writeValueAsString(createRequest)),
         )
             .andReturn()
 
@@ -90,7 +90,7 @@ class TodoControllerTest {
             put("/api/todos/$todoId")
                 .header("Authorization", "Bearer $authToken")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(updateRequest))
+                .content(objectMapper.writeValueAsString(updateRequest)),
         )
             .andExpect(status().isOk)
             .andExpect(jsonPath("$.title").value("Updated"))
@@ -104,7 +104,7 @@ class TodoControllerTest {
             post("/api/todos")
                 .header("Authorization", "Bearer $authToken")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(createRequest))
+                .content(objectMapper.writeValueAsString(createRequest)),
         )
             .andReturn()
 
@@ -114,7 +114,7 @@ class TodoControllerTest {
         // Toggle todo
         mockMvc.perform(
             patch("/api/todos/$todoId/toggle")
-                .header("Authorization", "Bearer $authToken")
+                .header("Authorization", "Bearer $authToken"),
         )
             .andExpect(status().isOk)
             .andExpect(jsonPath("$.completed").value(true))
@@ -128,7 +128,7 @@ class TodoControllerTest {
             post("/api/todos")
                 .header("Authorization", "Bearer $authToken")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(createRequest))
+                .content(objectMapper.writeValueAsString(createRequest)),
         )
             .andReturn()
 
@@ -138,7 +138,7 @@ class TodoControllerTest {
         // Delete todo
         mockMvc.perform(
             delete("/api/todos/$todoId")
-                .header("Authorization", "Bearer $authToken")
+                .header("Authorization", "Bearer $authToken"),
         )
             .andExpect(status().isNoContent)
     }
@@ -151,7 +151,7 @@ class TodoControllerTest {
             post("/api/todos")
                 .header("Authorization", "Bearer $authToken")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(createRequest1))
+                .content(objectMapper.writeValueAsString(createRequest1)),
         )
             .andReturn()
 
@@ -161,7 +161,7 @@ class TodoControllerTest {
         // Toggle to complete
         mockMvc.perform(
             patch("/api/todos/$todoId1/toggle")
-                .header("Authorization", "Bearer $authToken")
+                .header("Authorization", "Bearer $authToken"),
         )
 
         // Create active todo
@@ -170,13 +170,13 @@ class TodoControllerTest {
             post("/api/todos")
                 .header("Authorization", "Bearer $authToken")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(createRequest2))
+                .content(objectMapper.writeValueAsString(createRequest2)),
         )
 
         // Get completed todos
         mockMvc.perform(
             get("/api/todos?completed=true")
-                .header("Authorization", "Bearer $authToken")
+                .header("Authorization", "Bearer $authToken"),
         )
             .andExpect(status().isOk)
             .andExpect(jsonPath("$").isArray)

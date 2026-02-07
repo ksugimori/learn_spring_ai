@@ -12,7 +12,6 @@ import java.time.LocalDate
 import java.util.*
 
 class TodoServiceTest {
-
     private lateinit var todoRepository: TodoRepository
     private lateinit var todoService: TodoService
     private lateinit var testUser: User
@@ -39,7 +38,7 @@ class TodoServiceTest {
     fun `findByUser should return todos for user`() {
         val todos = listOf(
             Todo(id = 1L, title = "Todo 1", user = testUser),
-            Todo(id = 2L, title = "Todo 2", user = testUser)
+            Todo(id = 2L, title = "Todo 2", user = testUser),
         )
         `when`(todoRepository.findByUser(testUser)).thenReturn(todos)
 
@@ -129,7 +128,7 @@ class TodoServiceTest {
     fun `findWithFiltersAndSort should apply filters correctly`() {
         val todos = listOf(
             Todo(id = 1L, title = "Completed Todo", completed = true, user = testUser),
-            Todo(id = 2L, title = "Active Todo", completed = false, user = testUser)
+            Todo(id = 2L, title = "Active Todo", completed = false, user = testUser),
         )
         `when`(todoRepository.findByUser(testUser)).thenReturn(todos)
 
@@ -144,7 +143,7 @@ class TodoServiceTest {
     fun `findWithFiltersAndSort should apply keyword filter`() {
         val todos = listOf(
             Todo(id = 1L, title = "Buy groceries", user = testUser),
-            Todo(id = 2L, title = "Clean house", user = testUser)
+            Todo(id = 2L, title = "Clean house", user = testUser),
         )
         `when`(todoRepository.findByUser(testUser)).thenReturn(todos)
 
@@ -159,7 +158,7 @@ class TodoServiceTest {
     fun `findWithFiltersAndSort should apply sort by title`() {
         val todos = listOf(
             Todo(id = 1L, title = "Zebra", user = testUser),
-            Todo(id = 2L, title = "Apple", user = testUser)
+            Todo(id = 2L, title = "Apple", user = testUser),
         )
         `when`(todoRepository.findByUser(testUser)).thenReturn(todos)
 

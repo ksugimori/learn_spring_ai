@@ -16,9 +16,8 @@ import java.time.LocalDate
 @RequestMapping("/api/todos")
 class TodoController(
     private val todoService: TodoService,
-    private val userService: UserService
+    private val userService: UserService,
 ) {
-
     @GetMapping
     fun getAllTodos(
         @RequestParam(required = false) completed: Boolean?,
@@ -28,7 +27,7 @@ class TodoController(
         @RequestParam(required = false) hasNoDueDate: Boolean?,
         @RequestParam(required = false, defaultValue = "CREATED_AT") sortBy: String?,
         @RequestParam(required = false, defaultValue = "DESC") sortDirection: String?,
-        authentication: Authentication
+        authentication: Authentication,
     ): ResponseEntity<List<TodoResponse>> {
         val user = userService.findByUsername(authentication.name)
             ?: return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build()
@@ -39,7 +38,7 @@ class TodoController(
             dueDateFrom = dueDateFrom,
             dueDateTo = dueDateTo,
             keyword = keyword,
-            hasNoDueDate = hasNoDueDate
+            hasNoDueDate = hasNoDueDate,
         )
 
         // ソート条件の構築
@@ -67,7 +66,7 @@ class TodoController(
     @GetMapping("/{id}")
     fun getTodoById(
         @PathVariable id: Long,
-        authentication: Authentication
+        authentication: Authentication,
     ): ResponseEntity<TodoResponse> {
         val user = userService.findByUsername(authentication.name)
             ?: return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build()
@@ -86,7 +85,7 @@ class TodoController(
     @PostMapping
     fun createTodo(
         @Valid @RequestBody request: TodoRequest,
-        authentication: Authentication
+        authentication: Authentication,
     ): ResponseEntity<TodoResponse> {
         val user = userService.findByUsername(authentication.name)
             ?: return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build()
@@ -99,7 +98,7 @@ class TodoController(
     fun updateTodo(
         @PathVariable id: Long,
         @Valid @RequestBody request: TodoUpdateRequest,
-        authentication: Authentication
+        authentication: Authentication,
     ): ResponseEntity<TodoResponse> {
         val user = userService.findByUsername(authentication.name)
             ?: return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build()
@@ -111,7 +110,7 @@ class TodoController(
     @PatchMapping("/{id}/toggle")
     fun toggleTodo(
         @PathVariable id: Long,
-        authentication: Authentication
+        authentication: Authentication,
     ): ResponseEntity<TodoResponse> {
         val user = userService.findByUsername(authentication.name)
             ?: return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build()
@@ -123,7 +122,7 @@ class TodoController(
     @DeleteMapping("/{id}")
     fun deleteTodo(
         @PathVariable id: Long,
-        authentication: Authentication
+        authentication: Authentication,
     ): ResponseEntity<Void> {
         val user = userService.findByUsername(authentication.name)
             ?: return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build()
@@ -168,7 +167,7 @@ class TodoController(
     @GetMapping("/search")
     fun searchTodos(
         @RequestParam keyword: String,
-        authentication: Authentication
+        authentication: Authentication,
     ): ResponseEntity<List<TodoResponse>> {
         val user = userService.findByUsername(authentication.name)
             ?: return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build()

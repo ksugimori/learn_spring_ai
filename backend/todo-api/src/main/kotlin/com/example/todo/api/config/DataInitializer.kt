@@ -11,27 +11,26 @@ import java.time.LocalDate
 
 @Configuration
 class DataInitializer {
-
     private val logger = LoggerFactory.getLogger(DataInitializer::class.java)
 
     @Bean
     fun initData(
         userService: UserService,
         todoService: TodoService,
-        passwordEncoder: PasswordEncoder
+        passwordEncoder: PasswordEncoder,
     ) = CommandLineRunner {
         logger.info("Starting sample data initialization...")
 
         // サンプルユーザーの作成
         val demoUser = userService.createUser(
             username = "demo",
-            encodedPassword = passwordEncoder.encode("password")
+            encodedPassword = passwordEncoder.encode("password"),
         )
         logger.info("Created demo user: ${demoUser.username}")
 
         val testUser = userService.createUser(
             username = "test",
-            encodedPassword = passwordEncoder.encode("test123")
+            encodedPassword = passwordEncoder.encode("test123"),
         )
         logger.info("Created test user: ${testUser.username}")
 
@@ -39,25 +38,25 @@ class DataInitializer {
         todoService.createTodo(
             user = demoUser,
             title = "Spring Bootの学習",
-            dueDate = LocalDate.now().plusDays(3)
+            dueDate = LocalDate.now().plusDays(3),
         )
 
         todoService.createTodo(
             user = demoUser,
             title = "Reactの学習",
-            dueDate = LocalDate.now().plusDays(5)
+            dueDate = LocalDate.now().plusDays(5),
         )
 
         todoService.createTodo(
             user = demoUser,
             title = "買い物に行く",
-            dueDate = LocalDate.now().plusDays(1)
+            dueDate = LocalDate.now().plusDays(1),
         )
 
         val completedTodo = todoService.createTodo(
             user = demoUser,
             title = "プロジェクトセットアップ",
-            dueDate = LocalDate.now().minusDays(2)
+            dueDate = LocalDate.now().minusDays(2),
         )
         // 完了済みに設定
         todoService.toggleTodo(completedTodo.id!!, demoUser)
@@ -65,20 +64,20 @@ class DataInitializer {
         todoService.createTodo(
             user = demoUser,
             title = "ドキュメント作成",
-            dueDate = null
+            dueDate = null,
         )
 
         // testユーザーのサンプルTodo
         todoService.createTodo(
             user = testUser,
             title = "テストケース作成",
-            dueDate = LocalDate.now().plusDays(2)
+            dueDate = LocalDate.now().plusDays(2),
         )
 
         todoService.createTodo(
             user = testUser,
             title = "コードレビュー",
-            dueDate = LocalDate.now()
+            dueDate = LocalDate.now(),
         )
 
         logger.info("Sample data initialization completed!")

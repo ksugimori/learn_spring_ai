@@ -7,5 +7,5 @@ data class TodoFilter(
     val dueDateFrom: LocalDate? = null,
     val dueDateTo: LocalDate? = null,
     val keyword: String? = null,
-    val hasNoDueDate: Boolean? = null
+    val hasNoDueDate: Boolean? = null,
 )

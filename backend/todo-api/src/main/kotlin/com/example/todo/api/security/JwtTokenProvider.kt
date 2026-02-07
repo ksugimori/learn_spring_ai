@@ -11,7 +11,6 @@ import javax.crypto.SecretKey
 
 @Component
 class JwtTokenProvider {
-
     @Value("\${jwt.secret:mySecretKeyForJwtTokenGenerationAndValidationPurpose}")
     private lateinit var secretKey: String
 
@@ -38,7 +37,10 @@ class JwtTokenProvider {
         return getClaims(token).subject
     }
 
-    fun validateToken(token: String, userDetails: UserDetails): Boolean {
+    fun validateToken(
+        token: String,
+        userDetails: UserDetails,
+    ): Boolean {
         val username = getUsernameFromToken(token)
         return username == userDetails.username && !isTokenExpired(token)
     }

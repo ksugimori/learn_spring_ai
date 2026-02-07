@@ -8,9 +8,14 @@ import com.example.todo.domain.model.User
  */
 interface UserRepository {
     fun findById(id: Long): User?
+
     fun findByUsername(username: String): User?
+
     fun existsByUsername(username: String): Boolean
+
     fun save(user: User): User
+
     fun findAll(): List<User>
+
     fun deleteById(id: Long)
 }

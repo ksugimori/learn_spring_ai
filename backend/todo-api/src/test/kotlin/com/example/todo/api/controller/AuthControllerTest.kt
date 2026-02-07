@@ -15,7 +15,6 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers.*
 @SpringBootTest
 @AutoConfigureMockMvc
 class AuthControllerTest {
-
     @Autowired
     private lateinit var mockMvc: MockMvc
 
@@ -29,7 +28,7 @@ class AuthControllerTest {
         mockMvc.perform(
             post("/api/auth/register")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(request))
+                .content(objectMapper.writeValueAsString(request)),
         )
             .andExpect(status().isCreated)
             .andExpect(jsonPath("$.token").exists())
@@ -44,14 +43,14 @@ class AuthControllerTest {
         mockMvc.perform(
             post("/api/auth/register")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(request))
+                .content(objectMapper.writeValueAsString(request)),
         )
 
         // Second registration with same username
         mockMvc.perform(
             post("/api/auth/register")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(request))
+                .content(objectMapper.writeValueAsString(request)),
         )
             .andExpect(status().isConflict)
     }
@@ -63,7 +62,7 @@ class AuthControllerTest {
         mockMvc.perform(
             post("/api/auth/register")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(registerRequest))
+                .content(objectMapper.writeValueAsString(registerRequest)),
         )
 
         // Login
@@ -71,7 +70,7 @@ class AuthControllerTest {
         mockMvc.perform(
             post("/api/auth/login")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(loginRequest))
+                .content(objectMapper.writeValueAsString(loginRequest)),
         )
             .andExpect(status().isOk)
             .andExpect(jsonPath("$.token").exists())
@@ -85,7 +84,7 @@ class AuthControllerTest {
         mockMvc.perform(
             post("/api/auth/login")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(request))
+                .content(objectMapper.writeValueAsString(request)),
         )
             .andExpect(status().isUnauthorized)
     }

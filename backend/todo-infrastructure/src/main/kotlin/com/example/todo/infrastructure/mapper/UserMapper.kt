@@ -6,14 +6,13 @@ import org.springframework.stereotype.Component
 
 @Component
 class UserMapper {
-
     fun toDomain(entity: UserEntity): User {
         return User(
             id = entity.id,
             username = entity.username,
             password = entity.password,
             createdAt = entity.createdAt,
-            updatedAt = entity.updatedAt
+            updatedAt = entity.updatedAt,
         )
     }
 
@@ -23,7 +22,7 @@ class UserMapper {
             username = domain.username,
             password = domain.password,
             createdAt = domain.createdAt,
-            updatedAt = domain.updatedAt
+            updatedAt = domain.updatedAt,
         )
     }
 

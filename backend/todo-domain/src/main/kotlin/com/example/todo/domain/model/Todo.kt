@@ -14,7 +14,7 @@ data class Todo(
     var completed: Boolean = false,
     val user: User,
     val createdAt: LocalDateTime = LocalDateTime.now(),
-    var updatedAt: LocalDateTime = LocalDateTime.now()
+    var updatedAt: LocalDateTime = LocalDateTime.now(),
 ) {
     /**
      * Todoの完了状態を切り替える

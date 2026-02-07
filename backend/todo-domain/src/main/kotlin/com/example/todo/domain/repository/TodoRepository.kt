@@ -10,12 +10,32 @@ import java.time.LocalDate
  */
 interface TodoRepository {
     fun findById(id: Long): Todo?
+
     fun findByUser(user: User): List<Todo>
-    fun findByUserAndCompleted(user: User, completed: Boolean): List<Todo>
-    fun findByUserAndTitleContaining(user: User, keyword: String): List<Todo>
-    fun findOverdueTodos(user: User, date: LocalDate): List<Todo>
-    fun findTodosByDueDate(user: User, date: LocalDate): List<Todo>
+
+    fun findByUserAndCompleted(
+        user: User,
+        completed: Boolean,
+    ): List<Todo>
+
+    fun findByUserAndTitleContaining(
+        user: User,
+        keyword: String,
+    ): List<Todo>
+
+    fun findOverdueTodos(
+        user: User,
+        date: LocalDate,
+    ): List<Todo>
+
+    fun findTodosByDueDate(
+        user: User,
+        date: LocalDate,
+    ): List<Todo>
+
     fun save(todo: Todo): Todo
+
     fun findAll(): List<Todo>
+
     fun deleteById(id: Long)
 }

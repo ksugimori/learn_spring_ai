@@ -19,19 +19,20 @@ class AuthController(
     private val userService: UserService,
     private val passwordEncoder: PasswordEncoder,
     private val authenticationManager: AuthenticationManager,
-    private val jwtTokenProvider: JwtTokenProvider
+    private val jwtTokenProvider: JwtTokenProvider,
 ) {
-
     @PostMapping("/register")
-    fun register(@Valid @RequestBody request: RegisterRequest): ResponseEntity<AuthResponse> {
+    fun register(
+        @Valid @RequestBody request: RegisterRequest,
+    ): ResponseEntity<AuthResponse> {
         // Check if username already exists
         if (userService.existsByUsername(request.username)) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(
                 AuthResponse(
                     token = "",
                     username = request.username,
-                    message = "Username already exists"
-                )
+                    message = "Username already exists",
+                ),
             )
         }
 
@@ -46,16 +47,18 @@ class AuthController(
             AuthResponse(
                 token = token,
                 username = user.username,
-                message = "User registered successfully"
-            )
+                message = "User registered successfully",
+            ),
         )
     }
 
     @PostMapping("/login")
-    fun login(@Valid @RequestBody request: LoginRequest): ResponseEntity<AuthResponse> {
+    fun login(
+        @Valid @RequestBody request: LoginRequest,
+    ): ResponseEntity<AuthResponse> {
         // Authenticate user
         authenticationManager.authenticate(
-            UsernamePasswordAuthenticationToken(request.username, request.password)
+            UsernamePasswordAuthenticationToken(request.username, request.password),
         )
 
         // Generate JWT token
@@ -65,8 +68,8 @@ class AuthController(
             AuthResponse(
                 token = token,
                 username = request.username,
-                message = "Login successful"
-            )
+                message = "Login successful",
+            ),
         )
     }
 

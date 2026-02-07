@@ -11,7 +11,7 @@ data class TodoResponse(
     val completed: Boolean,
     val userId: Long,
     val createdAt: LocalDateTime,
-    val updatedAt: LocalDateTime
+    val updatedAt: LocalDateTime,
 ) {
     companion object {
         fun from(todo: Todo): TodoResponse {
@@ -22,7 +22,7 @@ data class TodoResponse(
                 completed = todo.completed,
                 userId = todo.user.id!!,
                 createdAt = todo.createdAt,
-                updatedAt = todo.updatedAt
+                updatedAt = todo.updatedAt,
             )
         }
     }

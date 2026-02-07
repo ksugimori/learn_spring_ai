@@ -5,15 +5,15 @@ enum class TodoSortField {
     DUE_DATE,
     CREATED_AT,
     UPDATED_AT,
-    COMPLETED
+    COMPLETED,
 }
 
 enum class SortDirection {
     ASC,
-    DESC
+    DESC,
 }
 
 data class TodoSort(
     val field: TodoSortField = TodoSortField.CREATED_AT,
-    val direction: SortDirection = SortDirection.DESC
+    val direction: SortDirection = SortDirection.DESC,
 )
