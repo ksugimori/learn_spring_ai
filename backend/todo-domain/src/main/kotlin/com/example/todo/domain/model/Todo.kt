@@ -1,41 +1,33 @@
 package com.example.todo.domain.model
 
-import jakarta.persistence.*
 import java.time.LocalDate
 import java.time.LocalDateTime
 
-@Entity
-@Table(name = "todos")
+/**
+ * Todoドメインモデル（Pure Domain Model）
+ * インフラストラクチャ（JPA等）に依存しない
+ */
 data class Todo(
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long? = null,
-
-    @Column(nullable = false)
     var title: String,
-
-    @Column(name = "due_date")
     var dueDate: LocalDate? = null,
-
-    @Column(nullable = false)
     var completed: Boolean = false,
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
     val user: User,
-
-    @Column(nullable = false, updatable = false)
     val createdAt: LocalDateTime = LocalDateTime.now(),
-
-    @Column(nullable = false)
     var updatedAt: LocalDateTime = LocalDateTime.now()
 ) {
-    @PreUpdate
-    fun onPreUpdate() {
-        updatedAt = LocalDateTime.now()
-    }
-
+    /**
+     * Todoの完了状態を切り替える
+     */
     fun toggle() {
         completed = !completed
+    }
+
+    /**
+     * 期限切れかどうかを判定
+     */
+    fun isOverdue(): Boolean {
+        val due = dueDate ?: return false
+        return !completed && due.isBefore(LocalDate.now())
     }
 }

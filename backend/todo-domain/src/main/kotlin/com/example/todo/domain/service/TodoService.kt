@@ -13,7 +13,7 @@ class TodoService(
     private val todoRepository: TodoRepository
 ) {
     fun findById(id: Long): Todo? {
-        return todoRepository.findById(id).orElse(null)
+        return todoRepository.findById(id)
     }
 
     fun findByUser(user: User): List<Todo> {

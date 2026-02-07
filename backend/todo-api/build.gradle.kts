@@ -9,6 +9,9 @@ dependencies {
     // todo-domain モジュールへの依存
     implementation(project(":todo-domain"))
 
+    // todo-infrastructure モジュールへの依存（リポジトリ実装）
+    implementation(project(":todo-infrastructure"))
+
     // Spring Data JPA (for annotations and configuration)
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
 

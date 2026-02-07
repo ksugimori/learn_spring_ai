@@ -1,6 +1,7 @@
 plugins {
     kotlin("jvm") version "1.9.25"
     kotlin("plugin.spring") version "1.9.25"
+    kotlin("plugin.jpa") version "1.9.25"
     id("org.springframework.boot") version "3.5.10"
     id("io.spring.dependency-management") version "1.1.7"
 }
@@ -15,10 +16,12 @@ tasks.getByName<Jar>("jar") {
 }
 
 dependencies {
-    // Spring Core (DI/Transaction for Service layer)
-    implementation("org.springframework:spring-context")
-    implementation("org.springframework:spring-tx")
+    // todo-domain モジュールへの依存（依存性逆転）
+    implementation(project(":todo-domain"))
 
-    // Stereotype annotations (@Service, etc.)
-    implementation("org.springframework:spring-core")
+    // Spring Data JPA
+    implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+
+    // H2 Database
+    runtimeOnly("com.h2database:h2")
 }

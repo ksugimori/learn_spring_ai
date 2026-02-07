@@ -11,7 +11,7 @@ class UserService(
     private val userRepository: UserRepository
 ) {
     fun findById(id: Long): User? {
-        return userRepository.findById(id).orElse(null)
+        return userRepository.findById(id)
     }
 
     fun findByUsername(username: String): User? {
