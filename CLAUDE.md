@@ -6,16 +6,17 @@ Spring Boot (Kotlin) + React (TypeScript)のフルスタックTodoアプリケ�
 
 ```
 learn_spring_ai/
-├── backend/           # Spring Boot Kotlinバックエンド
-│   ├── todo-domain/  # ドメイン層（エンティティ、リポジトリ、サービス）
-│   └── todo-api/     # API層（コントローラー、セキュリティ、DTO）
-└── frontend/         # React TypeScriptフロントエンド
+├── backend/                # Spring Boot Kotlinバックエンド（DDD設計）
+│   ├── todo-domain/       # ドメイン層（Pure Domain Model）
+│   ├── todo-infrastructure/ # インフラストラクチャ層（データアクセス実装）
+│   └── todo-api/          # アプリケーション層（REST API + MCP）
+└── frontend/              # React TypeScriptフロントエンド
     └── src/
-        ├── api/      # APIクライアント
-        ├── components/ # 再利用可能コンポーネント
-        ├── contexts/ # グローバル状態（認証）
-        ├── pages/    # ページコンポーネント
-        └── types/    # TypeScript型定義
+        ├── api/           # APIクライアント
+        ├── components/    # 再利用可能コンポーネント
+        ├── contexts/      # グローバル状態（認証）
+        ├── pages/         # ページコンポーネント
+        └── types/         # TypeScript型定義
 ```
 
 ## 技術スタック
@@ -45,7 +46,11 @@ cd frontend && npm install && npm run dev
 
 ## 重要な設計判断
 
-- **マルチモジュール構成**: ドメイン層とAPI層を分離
+- **DDD設計**: ドメイン駆動設計に基づく3層アーキテクチャ
+  - Pure Domain Model（JPAアノテーションなし）
+  - リポジトリパターン（ポート&アダプター）
+  - 依存性逆転原則（インフラ→ドメイン）
+- **マルチモジュール構成**: domain, infrastructure, api の3モジュール分離
 - **JWT認証**: LocalStorageに保存、Axiosインターセプターで自動付与
 - **インラインスタイル**: CSS-in-JSで型安全なスタイリング
 - **H2インメモリDB**: 開発用、起動時にスキーマ自動生成（create-drop）

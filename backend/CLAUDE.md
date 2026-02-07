@@ -1,36 +1,88 @@
-# Backend - Spring Boot Kotlin
+# Backend - Spring Boot Kotlin (DDD設計)
 
 ## 構成
 
 ```
 backend/
-├── todo-domain/              # ドメイン層
+├── todo-domain/              # ドメイン層（Pure Domain Model）
 │   └── src/main/kotlin/com/example/todo/domain/
-│       ├── model/           # User.kt, Todo.kt
-│       ├── repository/      # UserRepository.kt, TodoRepository.kt
+│       ├── model/           # User.kt, Todo.kt (JPAアノテーションなし)
+│       ├── repository/      # UserRepository.kt, TodoRepository.kt (インターフェース)
 │       └── service/         # UserService.kt, TodoService.kt, TodoFilter.kt, TodoSort.kt
-└── todo-api/                # API層 + MCP Server
+│
+├── todo-infrastructure/      # インフラストラクチャ層（データアクセス実装）
+│   └── src/main/kotlin/com/example/todo/infrastructure/
+│       ├── entity/          # UserEntity.kt, TodoEntity.kt (JPAエンティティ)
+│       ├── jpa/            # UserJpaRepository.kt, TodoJpaRepository.kt (Spring Data JPA)
+│       ├── repository/      # UserRepositoryImpl.kt, TodoRepositoryImpl.kt (実装)
+│       └── mapper/          # UserMapper.kt, TodoMapper.kt (Domain ⇔ Entity変換)
+│
+└── todo-api/                # アプリケーション層（REST API + MCP Server）
     └── src/main/kotlin/com/example/todo/
         ├── TodoApiApplication.kt
         └── api/
-            ├── config/      # SecurityConfig.kt, GlobalExceptionHandler.kt
+            ├── config/      # SecurityConfig.kt, GlobalExceptionHandler.kt, DataInitializer.kt
             ├── controller/  # AuthController.kt, TodoController.kt
             ├── dto/         # Request/Response DTO
             ├── mcp/         # TodoTools.kt (MCP Tools)
             └── security/    # JwtTokenProvider.kt, JwtAuthenticationFilter.kt, CustomUserDetailsService.kt
 ```
 
+## アーキテクチャ
+
+### DDD（ドメイン駆動設計）
+
+**依存関係（依存性逆転原則）:**
+```
+todo-api ───→ todo-domain ←─── todo-infrastructure
+                 ↑                      ↓
+            (インターフェース)      (実装)
+```
+
+**レイヤー構成:**
+- **Domain Layer**: ビジネスロジックとルール（インフラ非依存）
+- **Infrastructure Layer**: データアクセス、外部サービス連携
+- **Application Layer**: ユースケース、REST API、MCP Server
+
 ## 主要クラス
 
-**エンティティ:**
-- `User`: id, username, password(BCrypt), createdAt, updatedAt
-- `Todo`: id, title, dueDate, completed, user(ManyToOne), createdAt, updatedAt
+### ドメイン層（todo-domain）
 
-**サービス:**
+**ドメインモデル（Pure Domain Model）:**
+- `User`: id, username, password, createdAt, updatedAt
+  - JPAアノテーションなし、純粋なKotlin data class
+- `Todo`: id, title, dueDate, completed, user, createdAt, updatedAt
+  - ドメインロジック: `toggle()`, `isOverdue()`
+
+**リポジトリインターフェース（ポート）:**
+- `UserRepository`: ユーザーデータアクセスのインターフェース
+- `TodoRepository`: Todoデータアクセスのインターフェース
+
+**ドメインサービス:**
 - `UserService`: ユーザーCRUD、重複チェック
 - `TodoService`: Todo CRUD、権限チェック、`findWithFiltersAndSort()`で高度な検索
 - `TodoFilter`: completed, dueDateFrom/To, keyword, hasNoDueDate
 - `TodoSort`: field(TITLE/DUE_DATE/CREATED_AT/UPDATED_AT/COMPLETED), direction(ASC/DESC)
+
+### インフラストラクチャ層（todo-infrastructure）
+
+**JPAエンティティ:**
+- `UserEntity`: @Entity, @Table等のJPAアノテーション付き
+- `TodoEntity`: JPA関連の設定（@ManyToOne, @JoinColumn等）
+
+**Spring Data JPAリポジトリ:**
+- `UserJpaRepository`: JpaRepository<UserEntity, Long>
+- `TodoJpaRepository`: カスタムクエリ（@Query）を含む
+
+**リポジトリ実装（アダプター）:**
+- `UserRepositoryImpl`: UserRepositoryインターフェースの実装
+- `TodoRepositoryImpl`: TodoRepositoryインターフェースの実装
+
+**マッパー:**
+- `UserMapper`: User（ドメイン） ⇔ UserEntity（永続化）
+- `TodoMapper`: Todo（ドメイン） ⇔ TodoEntity（永続化）
+
+### アプリケーション層（todo-api）
 
 **セキュリティ:**
 - `SecurityConfig`: JWT設定、CORS、エンドポイント認可
@@ -56,8 +108,21 @@ backend/
 - JWT secret/expiration設定
 - JPA: ddl-auto=create-drop（開発用）
 - MCP: protocol=STREAMABLE, transport=WEBMVC
+- EntityScan: com.example.todo.infrastructure.entity
+- EnableJpaRepositories: com.example.todo.infrastructure.jpa
 - ポート8080
 
 **build.gradle.kts:**
 - JVMターゲット: Java 17
-- マルチモジュール: todo-domainとtodo-api
+- マルチモジュール: todo-domain, todo-infrastructure, todo-api
+- 依存関係:
+  - todo-infrastructure → todo-domain
+  - todo-api → todo-domain
+  - todo-api → todo-infrastructure
+
+## 設計のメリット
+
+1. **テスタビリティ**: ドメインロジックをインフラなしでテスト可能
+2. **保守性**: 関心の分離により変更の影響範囲が明確
+3. **拡張性**: データストアの切り替えが容易（JPA→別のORMなど）
+4. **ビジネスロジックの独立性**: ドメインモデルが純粋なビジネスルールに集中
