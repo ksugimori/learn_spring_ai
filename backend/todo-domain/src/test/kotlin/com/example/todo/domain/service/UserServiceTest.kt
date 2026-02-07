@@ -6,8 +6,7 @@ import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
-import org.mockito.Mockito.*
-import java.util.*
+import org.mockito.kotlin.*
 
 class UserServiceTest {
     private lateinit var userRepository: UserRepository
@@ -15,14 +14,14 @@ class UserServiceTest {
 
     @BeforeEach
     fun setup() {
-        userRepository = mock(UserRepository::class.java)
+        userRepository = mock()
         userService = UserService(userRepository)
     }
 
     @Test
     fun `findById should return user when exists`() {
         val user = User(id = 1L, username = "testuser", password = "password")
-        `when`(userRepository.findById(1L)).thenReturn(Optional.of(user))
+        whenever(userRepository.findById(1L)).thenReturn(user)
 
         val result = userService.findById(1L)
 
@@ -32,7 +31,7 @@ class UserServiceTest {
 
     @Test
     fun `findById should return null when not exists`() {
-        `when`(userRepository.findById(1L)).thenReturn(Optional.empty())
+        whenever(userRepository.findById(1L)).thenReturn(null)
 
         val result = userService.findById(1L)
 
@@ -42,7 +41,7 @@ class UserServiceTest {
     @Test
     fun `findByUsername should return user when exists`() {
         val user = User(id = 1L, username = "testuser", password = "password")
-        `when`(userRepository.findByUsername("testuser")).thenReturn(user)
+        whenever(userRepository.findByUsername("testuser")).thenReturn(user)
 
         val result = userService.findByUsername("testuser")
 
@@ -52,7 +51,7 @@ class UserServiceTest {
 
     @Test
     fun `existsByUsername should return true when exists`() {
-        `when`(userRepository.existsByUsername("testuser")).thenReturn(true)
+        whenever(userRepository.existsByUsername("testuser")).thenReturn(true)
 
         val result = userService.existsByUsername("testuser")
 
@@ -61,7 +60,7 @@ class UserServiceTest {
 
     @Test
     fun `createUser should throw exception when username exists`() {
-        `when`(userRepository.existsByUsername("testuser")).thenReturn(true)
+        whenever(userRepository.existsByUsername("testuser")).thenReturn(true)
 
         assertThrows<IllegalArgumentException> {
             userService.createUser("testuser", "encodedPassword")
@@ -71,13 +70,13 @@ class UserServiceTest {
     @Test
     fun `createUser should save and return user when username is unique`() {
         val user = User(id = 1L, username = "newuser", password = "encodedPassword")
-        `when`(userRepository.existsByUsername("newuser")).thenReturn(false)
-        `when`(userRepository.save(any(User::class.java))).thenReturn(user)
+        whenever(userRepository.existsByUsername("newuser")).thenReturn(false)
+        whenever(userRepository.save(any())).thenReturn(user)
 
         val result = userService.createUser("newuser", "encodedPassword")
 
         assertNotNull(result)
         assertEquals("newuser", result.username)
-        verify(userRepository, times(1)).save(any(User::class.java))
+        verify(userRepository, times(1)).save(any())
     }
 }

@@ -7,9 +7,8 @@ import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
-import org.mockito.Mockito.*
+import org.mockito.kotlin.*
 import java.time.LocalDate
-import java.util.*
 
 class TodoServiceTest {
     private lateinit var todoRepository: TodoRepository
@@ -18,7 +17,7 @@ class TodoServiceTest {
 
     @BeforeEach
     fun setup() {
-        todoRepository = mock(TodoRepository::class.java)
+        todoRepository = mock()
         todoService = TodoService(todoRepository)
         testUser = User(id = 1L, username = "testuser", password = "password")
     }
@@ -26,7 +25,7 @@ class TodoServiceTest {
     @Test
     fun `findById should return todo when exists`() {
         val todo = Todo(id = 1L, title = "Test Todo", user = testUser)
-        `when`(todoRepository.findById(1L)).thenReturn(Optional.of(todo))
+        whenever(todoRepository.findById(1L)).thenReturn(todo)
 
         val result = todoService.findById(1L)
 
@@ -40,7 +39,7 @@ class TodoServiceTest {
             Todo(id = 1L, title = "Todo 1", user = testUser),
             Todo(id = 2L, title = "Todo 2", user = testUser),
         )
-        `when`(todoRepository.findByUser(testUser)).thenReturn(todos)
+        whenever(todoRepository.findByUser(testUser)).thenReturn(todos)
 
         val result = todoService.findByUser(testUser)
 
@@ -50,18 +49,18 @@ class TodoServiceTest {
     @Test
     fun `createTodo should save and return todo`() {
         val todo = Todo(id = 1L, title = "New Todo", dueDate = LocalDate.now(), user = testUser)
-        `when`(todoRepository.save(any(Todo::class.java))).thenReturn(todo)
+        whenever(todoRepository.save(any())).thenReturn(todo)
 
         val result = todoService.createTodo(testUser, "New Todo", LocalDate.now())
 
         assertNotNull(result)
         assertEquals("New Todo", result.title)
-        verify(todoRepository, times(1)).save(any(Todo::class.java))
+        verify(todoRepository, times(1)).save(any())
     }
 
     @Test
     fun `updateTodo should throw exception when todo not found`() {
-        `when`(todoRepository.findById(1L)).thenReturn(Optional.empty())
+        whenever(todoRepository.findById(1L)).thenReturn(null)
 
         assertThrows<IllegalArgumentException> {
             todoService.updateTodo(1L, testUser, "Updated", null)
@@ -72,7 +71,7 @@ class TodoServiceTest {
     fun `updateTodo should throw exception when user not authorized`() {
         val otherUser = User(id = 2L, username = "otheruser", password = "password")
         val todo = Todo(id = 1L, title = "Todo", user = otherUser)
-        `when`(todoRepository.findById(1L)).thenReturn(Optional.of(todo))
+        whenever(todoRepository.findById(1L)).thenReturn(todo)
 
         assertThrows<IllegalArgumentException> {
             todoService.updateTodo(1L, testUser, "Updated", null)
@@ -82,32 +81,32 @@ class TodoServiceTest {
     @Test
     fun `updateTodo should update and return todo when authorized`() {
         val todo = Todo(id = 1L, title = "Original", user = testUser)
-        `when`(todoRepository.findById(1L)).thenReturn(Optional.of(todo))
-        `when`(todoRepository.save(any(Todo::class.java))).thenReturn(todo)
+        whenever(todoRepository.findById(1L)).thenReturn(todo)
+        whenever(todoRepository.save(any())).thenReturn(todo)
 
         val result = todoService.updateTodo(1L, testUser, "Updated", LocalDate.now())
 
         assertEquals("Updated", result.title)
-        verify(todoRepository, times(1)).save(any(Todo::class.java))
+        verify(todoRepository, times(1)).save(any())
     }
 
     @Test
     fun `toggleTodo should toggle completion status`() {
         val todo = Todo(id = 1L, title = "Todo", completed = false, user = testUser)
-        `when`(todoRepository.findById(1L)).thenReturn(Optional.of(todo))
-        `when`(todoRepository.save(any(Todo::class.java))).thenReturn(todo)
+        whenever(todoRepository.findById(1L)).thenReturn(todo)
+        whenever(todoRepository.save(any())).thenReturn(todo)
 
         val result = todoService.toggleTodo(1L, testUser)
 
         assertTrue(result.completed)
-        verify(todoRepository, times(1)).save(any(Todo::class.java))
+        verify(todoRepository, times(1)).save(any())
     }
 
     @Test
     fun `deleteTodo should throw exception when user not authorized`() {
         val otherUser = User(id = 2L, username = "otheruser", password = "password")
         val todo = Todo(id = 1L, title = "Todo", user = otherUser)
-        `when`(todoRepository.findById(1L)).thenReturn(Optional.of(todo))
+        whenever(todoRepository.findById(1L)).thenReturn(todo)
 
         assertThrows<IllegalArgumentException> {
             todoService.deleteTodo(1L, testUser)
@@ -117,7 +116,7 @@ class TodoServiceTest {
     @Test
     fun `deleteTodo should delete when authorized`() {
         val todo = Todo(id = 1L, title = "Todo", user = testUser)
-        `when`(todoRepository.findById(1L)).thenReturn(Optional.of(todo))
+        whenever(todoRepository.findById(1L)).thenReturn(todo)
 
         todoService.deleteTodo(1L, testUser)
 
@@ -130,7 +129,7 @@ class TodoServiceTest {
             Todo(id = 1L, title = "Completed Todo", completed = true, user = testUser),
             Todo(id = 2L, title = "Active Todo", completed = false, user = testUser),
         )
-        `when`(todoRepository.findByUser(testUser)).thenReturn(todos)
+        whenever(todoRepository.findByUser(testUser)).thenReturn(todos)
 
         val filter = TodoFilter(completed = true)
         val result = todoService.findWithFiltersAndSort(testUser, filter)
@@ -145,7 +144,7 @@ class TodoServiceTest {
             Todo(id = 1L, title = "Buy groceries", user = testUser),
             Todo(id = 2L, title = "Clean house", user = testUser),
         )
-        `when`(todoRepository.findByUser(testUser)).thenReturn(todos)
+        whenever(todoRepository.findByUser(testUser)).thenReturn(todos)
 
         val filter = TodoFilter(keyword = "buy")
         val result = todoService.findWithFiltersAndSort(testUser, filter)
@@ -160,7 +159,7 @@ class TodoServiceTest {
             Todo(id = 1L, title = "Zebra", user = testUser),
             Todo(id = 2L, title = "Apple", user = testUser),
         )
-        `when`(todoRepository.findByUser(testUser)).thenReturn(todos)
+        whenever(todoRepository.findByUser(testUser)).thenReturn(todos)
 
         val sort = TodoSort(field = TodoSortField.TITLE, direction = SortDirection.ASC)
         val result = todoService.findWithFiltersAndSort(testUser, TodoFilter(), sort)
