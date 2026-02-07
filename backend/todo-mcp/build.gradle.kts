@@ -14,7 +14,7 @@ dependencies {
     // Spring Data JPA (for annotations and configuration)
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
 
-    // Spring AI
-    implementation("org.springframework.ai:spring-ai-starter-mcp-server:1.1.2")
+    // Spring AI MCP Server with WebMVC (SSE) support
+    implementation("org.springframework.ai:spring-ai-starter-mcp-server-webmvc:1.1.2")
 
 }
