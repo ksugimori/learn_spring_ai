@@ -119,42 +119,60 @@ class TodoService(
         filter: TodoFilter = TodoFilter(),
         sort: TodoSort = TodoSort(),
     ): List<Todo> {
-        // まずユーザーの全Todoを取得
-        var todos = todoRepository.findByUser(user)
+        val todos = todoRepository.findByUser(user)
+        val filteredTodos = applyFilters(todos, filter)
+        return applySort(filteredTodos, sort)
+    }
 
-        // フィルタリング
+    fun findWithFilters(
+        filter: TodoFilter,
+    ): List<Todo> {
+        val todos = todoRepository.findAll()
+        return applyFilters(todos, filter)
+    }
+
+    private fun applyFilters(
+        todos: List<Todo>,
+        filter: TodoFilter,
+    ): List<Todo> {
+        var result = todos
+
         filter.completed?.let { completed ->
-            todos = todos.filter { it.completed == completed }
+            result = result.filter { it.completed == completed }
         }
 
         filter.dueDateFrom?.let { from ->
-            todos = todos.filter { todo ->
-                val dueDate = todo.dueDate
-                dueDate != null && !dueDate.isBefore(from)
+            result = result.filter { todo ->
+                todo.dueDate?.let { !it.isBefore(from) } ?: false
             }
         }
 
         filter.dueDateTo?.let { to ->
-            todos = todos.filter { todo ->
-                val dueDate = todo.dueDate
-                dueDate != null && !dueDate.isAfter(to)
+            result = result.filter { todo ->
+                todo.dueDate?.let { !it.isAfter(to) } ?: false
             }
         }
 
         filter.keyword?.let { keyword ->
-            todos = todos.filter { it.title.contains(keyword, ignoreCase = true) }
+            result = result.filter { it.title.contains(keyword, ignoreCase = true) }
         }
 
         filter.hasNoDueDate?.let { hasNoDueDate ->
-            if (hasNoDueDate) {
-                todos = todos.filter { it.dueDate == null }
+            result = if (hasNoDueDate) {
+                result.filter { it.dueDate == null }
             } else {
-                todos = todos.filter { it.dueDate != null }
+                result.filter { it.dueDate != null }
             }
         }
 
-        // ソート
-        todos = when (sort.field) {
+        return result
+    }
+
+    private fun applySort(
+        todos: List<Todo>,
+        sort: TodoSort,
+    ): List<Todo> {
+        return when (sort.field) {
             TodoSortField.TITLE -> {
                 if (sort.direction == SortDirection.ASC) {
                     todos.sortedBy { it.title }
@@ -191,7 +209,5 @@ class TodoService(
                 }
             }
         }
-
-        return todos
     }
 }
