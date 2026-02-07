@@ -53,6 +53,7 @@ class SecurityConfig(
                 authorize
                     .requestMatchers("/api/auth/**").permitAll()
                     .requestMatchers("/h2-console/**").permitAll()
+                    .requestMatchers("/mcp/**").permitAll() // MCP endpoints
                     .anyRequest().authenticated()
             }
             .authenticationProvider(authenticationProvider())

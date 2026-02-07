@@ -26,6 +26,9 @@ dependencies {
     // Validation
     implementation("org.springframework.boot:spring-boot-starter-validation")
 
+    // Spring AI MCP Server with WebMVC (Streaming-HTTP) support
+    implementation("org.springframework.ai:spring-ai-starter-mcp-server-webmvc:1.1.2")
+
     // Test
     testImplementation("org.springframework.security:spring-security-test")
 }

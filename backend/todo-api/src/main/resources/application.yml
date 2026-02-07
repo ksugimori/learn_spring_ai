@@ -2,6 +2,16 @@ spring:
   application:
     name: todo-api
 
+  # MCP Server Configuration
+  ai:
+    mcp:
+      server:
+        transport: WEBMVC
+        type: SYNC
+        protocol: STREAMABLE
+        annotation-scanner:
+          enabled: true
+
   # H2 Database Configuration
   datasource:
     url: jdbc:h2:mem:tododb
