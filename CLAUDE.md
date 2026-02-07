@@ -20,7 +20,7 @@ learn_spring_ai/
 
 ## 技術スタック
 
-**バックエンド:** Kotlin 1.9.22, Spring Boot 3.2.2, Spring Security + JWT, H2 Database, Gradle
+**バックエンド:** Kotlin 1.9.22, Spring Boot 3.2.2, Spring Security + JWT, Spring AI MCP Server 1.1.2, H2 Database, Gradle
 **フロントエンド:** TypeScript, React 18, Vite, React Router, Axios
 
 ## 起動
@@ -41,6 +41,7 @@ cd frontend && npm install && npm run dev
 - Todo CRUD操作
 - 検索・フィルタ・ソート（キーワード、完了状態、複数フィールド）
 - 期限管理と期限切れ表示
+- MCP (Model Context Protocol) サーバー統合（Streaming-HTTP）
 
 ## 重要な設計判断
 
