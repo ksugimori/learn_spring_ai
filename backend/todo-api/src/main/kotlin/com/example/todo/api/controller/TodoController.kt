@@ -8,7 +8,6 @@ import jakarta.validation.Valid
 import org.springframework.format.annotation.DateTimeFormat
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
-import org.springframework.security.core.Authentication
 import org.springframework.web.bind.annotation.*
 import java.time.LocalDate
 
@@ -27,10 +26,10 @@ class TodoController(
         @RequestParam(required = false) hasNoDueDate: Boolean?,
         @RequestParam(required = false, defaultValue = "CREATED_AT") sortBy: String?,
         @RequestParam(required = false, defaultValue = "DESC") sortDirection: String?,
-        authentication: Authentication,
+        @RequestParam(required = true) userId: Long,
     ): ResponseEntity<List<TodoResponse>> {
-        val user = userService.findByUsername(authentication.name)
-            ?: return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build()
+        val user = userService.findById(userId)
+            ?: return ResponseEntity.status(HttpStatus.NOT_FOUND).build()
 
         // フィルタ条件の構築
         val filter = TodoFilter(
@@ -66,10 +65,10 @@ class TodoController(
     @GetMapping("/{id}")
     fun getTodoById(
         @PathVariable id: Long,
-        authentication: Authentication,
+        @RequestParam(required = true) userId: Long,
     ): ResponseEntity<TodoResponse> {
-        val user = userService.findByUsername(authentication.name)
-            ?: return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build()
+        val user = userService.findById(userId)
+            ?: return ResponseEntity.status(HttpStatus.NOT_FOUND).build()
 
         val todo = todoService.findById(id)
             ?: return ResponseEntity.notFound().build()
@@ -85,10 +84,10 @@ class TodoController(
     @PostMapping
     fun createTodo(
         @Valid @RequestBody request: TodoRequest,
-        authentication: Authentication,
+        @RequestParam(required = true) userId: Long,
     ): ResponseEntity<TodoResponse> {
-        val user = userService.findByUsername(authentication.name)
-            ?: return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build()
+        val user = userService.findById(userId)
+            ?: return ResponseEntity.status(HttpStatus.NOT_FOUND).build()
 
         val todo = todoService.createTodo(user, request.title, request.dueDate)
         return ResponseEntity.status(HttpStatus.CREATED).body(TodoResponse.from(todo))
@@ -98,10 +97,10 @@ class TodoController(
     fun updateTodo(
         @PathVariable id: Long,
         @Valid @RequestBody request: TodoUpdateRequest,
-        authentication: Authentication,
+        @RequestParam(required = true) userId: Long,
     ): ResponseEntity<TodoResponse> {
-        val user = userService.findByUsername(authentication.name)
-            ?: return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build()
+        val user = userService.findById(userId)
+            ?: return ResponseEntity.status(HttpStatus.NOT_FOUND).build()
 
         val todo = todoService.updateTodo(id, user, request.title, request.dueDate)
         return ResponseEntity.ok(TodoResponse.from(todo))
@@ -110,10 +109,10 @@ class TodoController(
     @PatchMapping("/{id}/toggle")
     fun toggleTodo(
         @PathVariable id: Long,
-        authentication: Authentication,
+        @RequestParam(required = true) userId: Long,
     ): ResponseEntity<TodoResponse> {
-        val user = userService.findByUsername(authentication.name)
-            ?: return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build()
+        val user = userService.findById(userId)
+            ?: return ResponseEntity.status(HttpStatus.NOT_FOUND).build()
 
         val todo = todoService.toggleTodo(id, user)
         return ResponseEntity.ok(TodoResponse.from(todo))
@@ -122,19 +121,21 @@ class TodoController(
     @DeleteMapping("/{id}")
     fun deleteTodo(
         @PathVariable id: Long,
-        authentication: Authentication,
+        @RequestParam(required = true) userId: Long,
     ): ResponseEntity<Void> {
-        val user = userService.findByUsername(authentication.name)
-            ?: return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build()
+        val user = userService.findById(userId)
+            ?: return ResponseEntity.status(HttpStatus.NOT_FOUND).build()
 
         todoService.deleteTodo(id, user)
         return ResponseEntity.noContent().build()
     }
 
     @GetMapping("/completed")
-    fun getCompletedTodos(authentication: Authentication): ResponseEntity<List<TodoResponse>> {
-        val user = userService.findByUsername(authentication.name)
-            ?: return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build()
+    fun getCompletedTodos(
+        @RequestParam(required = true) userId: Long,
+    ): ResponseEntity<List<TodoResponse>> {
+        val user = userService.findById(userId)
+            ?: return ResponseEntity.status(HttpStatus.NOT_FOUND).build()
 
         val todos = todoService.findByUserAndCompleted(user, true)
         val response = todos.map { TodoResponse.from(it) }
@@ -143,9 +144,11 @@ class TodoController(
     }
 
     @GetMapping("/active")
-    fun getActiveTodos(authentication: Authentication): ResponseEntity<List<TodoResponse>> {
-        val user = userService.findByUsername(authentication.name)
-            ?: return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build()
+    fun getActiveTodos(
+        @RequestParam(required = true) userId: Long,
+    ): ResponseEntity<List<TodoResponse>> {
+        val user = userService.findById(userId)
+            ?: return ResponseEntity.status(HttpStatus.NOT_FOUND).build()
 
         val todos = todoService.findByUserAndCompleted(user, false)
         val response = todos.map { TodoResponse.from(it) }
@@ -154,9 +157,11 @@ class TodoController(
     }
 
     @GetMapping("/overdue")
-    fun getOverdueTodos(authentication: Authentication): ResponseEntity<List<TodoResponse>> {
-        val user = userService.findByUsername(authentication.name)
-            ?: return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build()
+    fun getOverdueTodos(
+        @RequestParam(required = true) userId: Long,
+    ): ResponseEntity<List<TodoResponse>> {
+        val user = userService.findById(userId)
+            ?: return ResponseEntity.status(HttpStatus.NOT_FOUND).build()
 
         val todos = todoService.findOverdueTodos(user)
         val response = todos.map { TodoResponse.from(it) }
@@ -167,10 +172,10 @@ class TodoController(
     @GetMapping("/search")
     fun searchTodos(
         @RequestParam keyword: String,
-        authentication: Authentication,
+        @RequestParam(required = true) userId: Long,
     ): ResponseEntity<List<TodoResponse>> {
-        val user = userService.findByUsername(authentication.name)
-            ?: return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build()
+        val user = userService.findById(userId)
+            ?: return ResponseEntity.status(HttpStatus.NOT_FOUND).build()
 
         val todos = todoService.searchByKeyword(user, keyword)
         val response = todos.map { TodoResponse.from(it) }

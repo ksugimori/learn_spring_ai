@@ -41,11 +41,6 @@ spring:
       write-dates-as-timestamps: false
     time-zone: Asia/Tokyo
 
-# JWT Configuration
-jwt:
-  secret: mySecretKeyForJwtTokenGenerationAndValidationPurposeThisIsALongEnoughSecret
-  expiration: 86400000
-
 # Server Configuration
 server:
   port: 8080

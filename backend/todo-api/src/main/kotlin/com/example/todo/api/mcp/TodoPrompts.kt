@@ -10,7 +10,6 @@ import org.springframework.stereotype.Component
 
 @Component
 class TodoPrompts {
-
     @McpPrompt(name = "remain_todos", description = "未完了の Todo を知らせるメッセージを作成します")
     fun remainTodos(
         @McpArg(description = "ユーザー名", required = true)
@@ -20,7 +19,7 @@ class TodoPrompts {
             タスクの進捗状況をユーザーに報告するメッセージを作成してください。
 
             # 対象ユーザー
-            - ${name} さん
+            - $name さん
 
             # 全タスクの参照元
 
@@ -37,7 +36,7 @@ class TodoPrompts {
             "Remain Todos Prompt",
             listOf(
                 PromptMessage(Role.ASSISTANT, TextContent(propmt)),
-            )
+            ),
         )
     }
 }

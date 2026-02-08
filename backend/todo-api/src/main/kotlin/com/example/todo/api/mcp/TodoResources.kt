@@ -14,4 +14,3 @@ class TodoResources(private val todoService: TodoService) {
     )
     fun allTodos() = todoService.findAll()
 }
-
