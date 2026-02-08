@@ -11,11 +11,12 @@ Spring AI の使い方を学ぶために作成した Todo アプリケーショ�
 ### バックエンド
 - **言語**: Kotlin 1.9.22
 - **フレームワーク**: Spring Boot 3.2.2
-- **認証**: Spring Security + JWT
+- **セキュリティ**: Spring Security (簡易設定)
 - **データベース**: H2 Database (インメモリ)
 - **MCP**: Spring AI MCP Server 1.1.2
 - **ビルドツール**: Gradle
 - **コード品質**: ktlint
+- **アーキテクチャ**: ドメイン駆動設計 (DDD) - 3層構成
 
 ### フロントエンド
 - **言語**: TypeScript
@@ -73,3 +74,26 @@ npm run dev
   }
 }
 ```
+
+## ✨ 主要機能
+
+### ユーザー管理
+- ユーザー作成（名前のみ、重複チェックあり）
+- ユーザー一覧表示
+- ユーザー名変更
+- ユーザー削除（TODO存在時は削除不可）
+
+### TODO 管理
+- TODO 作成・更新・削除（ユーザー選択式）
+- TODO 完了/未完了の切り替え
+- ユーザーフィルタ
+- キーワード検索
+- 完了状態フィルタ
+- 複数フィールドでのソート（作成日時、更新日時、期限、タイトル）
+- 期限管理と期限切れ表示
+
+### MCP Server 統合
+- Spring AI MCP Server による Model Context Protocol サポート
+- Claude Desktop からの接続が可能
+- TODO 管理機能の MCP ツール化
+
