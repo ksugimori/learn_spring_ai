@@ -289,6 +289,30 @@
 
 ---
 
+## Phase 7: Spring Security 削除
+
+### 7.1 依存関係の削除
+- [x] `build.gradle.kts` - Spring Security 依存関係削除
+- [x] JWT 依存関係削除
+
+### 7.2 設定ファイルの削除と代替実装
+- [x] `SecurityConfig.kt` - 削除
+- [x] `WebConfig.kt` - 新規作成（WebMvcConfigurer でCORS設定）
+- [x] `GlobalExceptionHandler.kt` - Spring Security例外ハンドラー削除
+- [x] `application.yml` - H2 Console設定追加、Spring Securityログ削除
+
+### 7.3 Phase 7 テスト
+- [x] バックエンドビルド成功
+- [x] バックエンド起動成功
+- [x] CORS動作確認（プリフライトリクエスト成功）
+- [x] 全API動作確認（GET /api/users, GET /api/todos, POST /api/todos）
+
+### 7.4 ドキュメント更新
+- [x] README.md - Spring Security記載を完全削除
+- [x] CLAUDE.md - Spring Security記載を完全削除
+
+---
+
 ## 完了条件
 
 - [x] すべてのPhase 1〜6のタスクが完了

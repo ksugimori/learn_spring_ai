@@ -20,7 +20,7 @@ learn_spring_ai/
 
 ## 技術スタック
 
-**バックエンド:** Kotlin 1.9.22, Spring Boot 3.2.2, Spring Security (簡易設定), Spring AI MCP Server 1.1.2, H2 Database, Gradle
+**バックエンド:** Kotlin 1.9.22, Spring Boot 3.2.2, Spring AI MCP Server 1.1.2, H2 Database, Gradle
 **フロントエンド:** TypeScript, React 18, Vite, React Router, Axios
 
 ## 起動

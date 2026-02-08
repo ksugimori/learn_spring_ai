@@ -11,7 +11,6 @@ Spring AI の使い方を学ぶために作成した Todo アプリケーショ�
 ### バックエンド
 - **言語**: Kotlin 1.9.22
 - **フレームワーク**: Spring Boot 3.2.2
-- **セキュリティ**: Spring Security (簡易設定)
 - **データベース**: H2 Database (インメモリ)
 - **MCP**: Spring AI MCP Server 1.1.2
 - **ビルドツール**: Gradle
