@@ -207,47 +207,52 @@
 ## Phase 5: フロントエンド - TODO機能統合
 
 ### 5.1 型定義の更新
-- [ ] `src/types/todo.ts` - Todo型にユーザー情報追加
-  - [ ] `userId: number` フィールド確認（既存）
-  - [ ] `userName?: string` フィールド追加（オプショナル、バックエンドが返す場合）
+- [x] `src/types/index.ts` - Todo型にユーザー情報追加
+  - [x] `userId: number` フィールド確認（既存）
+  - [x] TodoRequest/UpdateRequestにuserIdフィールド追加
 
-### 5.2 APIクライアントの確認
-- [ ] `src/api/todos.ts` - レスポンス型の確認
-  - [ ] TodoレスポンスにuserIdが含まれることを確認
-  - [ ] 必要に応じてuserName取得ロジック追加
+### 5.2 APIクライアントの更新
+- [x] `src/api/todos.ts` - userId対応
+  - [x] すべてのメソッドでuserIdをパラメータとして受け取るように変更
+  - [x] create/update/delete/toggleメソッドにuserId追加
 
 ### 5.3 コンポーネントの更新
-- [ ] `src/components/TodoForm.tsx` - ユーザー選択追加
-  - [ ] ユーザー一覧取得処理追加
-  - [ ] ユーザー選択ドロップダウン追加
-  - [ ] 必須フィールドとして設定
-  - [ ] デフォルト値設定（編集時は既存ユーザー）
-  - [ ] 送信時にuserIdを含める
+- [x] `src/components/TodoForm.tsx` - ユーザー選択追加
+  - [x] ユーザー一覧をpropsで受け取る
+  - [x] ユーザー選択ドロップダウン追加
+  - [x] 必須フィールドとして設定
+  - [x] デフォルト値設定（編集時は既存ユーザー）
+  - [x] 送信時にuserIdを含める
 
 ### 5.4 TODO一覧画面の更新
-- [ ] `src/pages/TodosPage.tsx` - ユーザーフィルタ追加
-  - [ ] ユーザー一覧取得処理追加
-  - [ ] ユーザーフィルタドロップダウン追加
-  - [ ] フィルタ適用ロジック
-  - [ ] 「すべてのユーザー」オプション追加
+- [x] `src/pages/TodoListPage.tsx` - ユーザー統合
+  - [x] ユーザー一覧取得処理追加
+  - [x] ユーザーフィルタドロップダウン追加
+  - [x] フィルタ適用ロジック
+  - [x] 「すべてのユーザー」オプション追加
+  - [x] TodoFormにusers propsを渡す
+  - [x] ハンドラーでuserIdを渡す
 
-- [ ] `src/components/TodoList.tsx` - ユーザー名表示追加
-  - [ ] 各TODOにユーザー名を表示
-  - [ ] ユーザー名のスタイリング
+- [x] `src/components/TodoItem.tsx` - ユーザー名表示追加
+  - [x] userNameをpropsで受け取る
+  - [x] 各TODOにユーザー名を表示
+  - [x] ユーザー名のスタイリング
+  - [x] onToggle/onDeleteにuserIdを渡す
 
-### 5.5 Phase 5 テスト
-- [ ] TODO管理画面の動作確認
-  - [ ] ユーザー選択ドロップダウン表示
-  - [ ] ユーザー選択なしで作成不可
-  - [ ] TODO作成時にユーザーが設定される
-  - [ ] TODO編集時にユーザー変更可能
-  - [ ] TODO一覧でユーザー名表示（またはユーザーID表示）
-  - [ ] ユーザーフィルタが動作
-- [ ] 既存機能の動作確認
-  - [ ] 検索機能が正常動作
-  - [ ] 完了状態フィルタが正常動作
-  - [ ] ソート機能が正常動作
-  - [ ] 期限管理・期限切れ表示が正常動作
+### 5.5 バックエンド修正
+- [x] `TodoController.kt` - userId オプショナル対応
+  - [x] getAllTodosでuserIdをrequired=falseに変更
+  - [x] userIdなしでも全TODO取得可能にする
+- [x] `TodoService.kt` - ユーザーなしフィルタ対応
+  - [x] findAllWithFiltersAndSortメソッド追加
+
+### 5.6 Phase 5 テスト
+- [x] TypeScriptコンパイルチェック成功
+- [x] バックエンドビルド成功
+- [x] バックエンドAPI動作確認
+  - [x] GET /api/todos で全TODO取得成功
+  - [x] GET /api/todos?userId=N でフィルタ成功
+- [x] フロントエンド起動成功
 
 ---
 

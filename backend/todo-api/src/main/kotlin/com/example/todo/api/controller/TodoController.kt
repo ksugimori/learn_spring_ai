@@ -26,10 +26,15 @@ class TodoController(
         @RequestParam(required = false) hasNoDueDate: Boolean?,
         @RequestParam(required = false, defaultValue = "CREATED_AT") sortBy: String?,
         @RequestParam(required = false, defaultValue = "DESC") sortDirection: String?,
-        @RequestParam(required = true) userId: Long,
+        @RequestParam(required = false) userId: Long?,
     ): ResponseEntity<List<TodoResponse>> {
-        val user = userService.findById(userId)
-            ?: return ResponseEntity.status(HttpStatus.NOT_FOUND).build()
+        // ユーザーIDが指定された場合はユーザー存在確認
+        val user = if (userId != null) {
+            userService.findById(userId)
+                ?: return ResponseEntity.status(HttpStatus.NOT_FOUND).build()
+        } else {
+            null
+        }
 
         // フィルタ条件の構築
         val filter = TodoFilter(
@@ -56,7 +61,11 @@ class TodoController(
         val sort = TodoSort(field = sortField, direction = direction)
 
         // フィルタ・ソート適用
-        val todos = todoService.findWithFiltersAndSort(user, filter, sort)
+        val todos = if (user != null) {
+            todoService.findWithFiltersAndSort(user, filter, sort)
+        } else {
+            todoService.findAllWithFiltersAndSort(filter, sort)
+        }
         val response = todos.map { TodoResponse.from(it) }
 
         return ResponseEntity.ok(response)

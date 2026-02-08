@@ -1,18 +1,31 @@
 import React, { useState, useEffect } from 'react';
 import { todosApi } from '../api/todos';
+import { usersApi } from '../api/users';
 import type { Todo, TodoFilter } from '../types';
+import type { User } from '../types/user';
 import TodoItem from '../components/TodoItem';
 import TodoForm from '../components/TodoForm';
 
 const TodoListPage: React.FC = () => {
   const [todos, setTodos] = useState<Todo[]>([]);
+  const [users, setUsers] = useState<User[]>([]);
   const [editingTodo, setEditingTodo] = useState<Todo | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [keyword, setKeyword] = useState('');
   const [filterCompleted, setFilterCompleted] = useState<boolean | undefined>(undefined);
+  const [filterUserId, setFilterUserId] = useState<number | undefined>(undefined);
   const [sortBy, setSortBy] = useState('CREATED_AT');
   const [sortDirection, setSortDirection] = useState<'ASC' | 'DESC'>('DESC');
+
+  const fetchUsers = async () => {
+    try {
+      const data = await usersApi.getAll();
+      setUsers(data);
+    } catch (err: any) {
+      setError(err.response?.data?.message || 'ユーザーの取得に失敗しました');
+    }
+  };
 
   const fetchTodos = async () => {
     setLoading(true);
@@ -26,7 +39,7 @@ const TodoListPage: React.FC = () => {
         sortDirection,
       };
 
-      const data = await todosApi.getAll(filter);
+      const data = await todosApi.getAll(filter, filterUserId);
       setTodos(data);
     } catch (err: any) {
       setError(err.response?.data?.message || 'Todoの取得に失敗しました');
@@ -36,23 +49,27 @@ const TodoListPage: React.FC = () => {
   };
 
   useEffect(() => {
-    fetchTodos();
-  }, [filterCompleted, sortBy, sortDirection]);
+    fetchUsers();
+  }, []);
 
-  const handleCreateTodo = async (title: string, dueDate: string | null) => {
+  useEffect(() => {
+    fetchTodos();
+  }, [filterCompleted, filterUserId, sortBy, sortDirection]);
+
+  const handleCreateTodo = async (title: string, dueDate: string | null, userId: number) => {
     try {
-      await todosApi.create({ title, dueDate: dueDate || undefined });
+      await todosApi.create({ title, dueDate: dueDate || undefined, userId });
       fetchTodos();
     } catch (err: any) {
       setError(err.response?.data?.message || 'Todoの作成に失敗しました');
     }
   };
 
-  const handleUpdateTodo = async (title: string, dueDate: string | null) => {
+  const handleUpdateTodo = async (title: string, dueDate: string | null, userId: number) => {
     if (!editingTodo) return;
 
     try {
-      await todosApi.update(editingTodo.id, { title, dueDate: dueDate || undefined });
+      await todosApi.update(editingTodo.id, { title, dueDate: dueDate || undefined, userId });
       setEditingTodo(null);
       fetchTodos();
     } catch (err: any) {
@@ -60,20 +77,20 @@ const TodoListPage: React.FC = () => {
     }
   };
 
-  const handleToggleTodo = async (id: number) => {
+  const handleToggleTodo = async (id: number, userId: number) => {
     try {
-      await todosApi.toggle(id);
+      await todosApi.toggle(id, userId);
       fetchTodos();
     } catch (err: any) {
       setError(err.response?.data?.message || 'Todoの更新に失敗しました');
     }
   };
 
-  const handleDeleteTodo = async (id: number) => {
+  const handleDeleteTodo = async (id: number, userId: number) => {
     if (!confirm('本当に削除しますか？')) return;
 
     try {
-      await todosApi.delete(id);
+      await todosApi.delete(id, userId);
       fetchTodos();
     } catch (err: any) {
       setError(err.response?.data?.message || 'Todoの削除に失敗しました');
@@ -96,6 +113,7 @@ const TodoListPage: React.FC = () => {
 
         <TodoForm
           todo={editingTodo || undefined}
+          users={users}
           onSubmit={editingTodo ? handleUpdateTodo : handleCreateTodo}
           onCancel={() => setEditingTodo(null)}
         />
@@ -113,6 +131,25 @@ const TodoListPage: React.FC = () => {
               検索
             </button>
           </form>
+
+          <div style={styles.filterGroup}>
+            <label>ユーザー:</label>
+            <select
+              value={filterUserId === undefined ? 'all' : filterUserId.toString()}
+              onChange={(e) => {
+                const value = e.target.value;
+                setFilterUserId(value === 'all' ? undefined : Number(value));
+              }}
+              style={styles.select}
+            >
+              <option value="all">すべてのユーザー</option>
+              {users.map((user) => (
+                <option key={user.id} value={user.id}>
+                  {user.name}
+                </option>
+              ))}
+            </select>
+          </div>
 
           <div style={styles.filterGroup}>
             <label>フィルタ:</label>
@@ -164,6 +201,7 @@ const TodoListPage: React.FC = () => {
                 <TodoItem
                   key={todo.id}
                   todo={todo}
+                  userName={users.find((u) => u.id === todo.userId)?.name || 'Unknown'}
                   onToggle={handleToggleTodo}
                   onEdit={setEditingTodo}
                   onDelete={handleDeleteTodo}
