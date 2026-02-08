@@ -1,7 +1,6 @@
 package com.example.todo.api.mcp
 
 import com.example.todo.domain.model.Todo
-import com.example.todo.domain.repository.TodoRepository
 import com.example.todo.domain.service.TodoFilter
 import com.example.todo.domain.service.TodoService
 import org.springaicommunity.mcp.annotation.McpTool
@@ -12,11 +11,6 @@ import kotlin.Boolean
 
 @Component
 class TodoTools(private val todoService: TodoService) {
-    @McpTool(name = "get_all_todos", description = "Todo の一覧を取得します")
-    fun getAllTodos(): List<Todo> {
-        return todoService.findAll()
-    }
-
     @McpTool(name = "search_todos", description = "条件を指定して Todo を検索します")
     fun searchTodos(
         @McpToolParam(description = "完了しているか？", required = false)
