@@ -3,8 +3,6 @@ package com.example.todo.api.config
 import com.example.todo.api.dto.ErrorResponse
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
-import org.springframework.security.authentication.BadCredentialsException
-import org.springframework.security.core.userdetails.UsernameNotFoundException
 import org.springframework.web.bind.MethodArgumentNotValidException
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.RestControllerAdvice
@@ -26,32 +24,18 @@ class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse)
     }
 
-    @ExceptionHandler(UsernameNotFoundException::class)
-    fun handleUsernameNotFoundException(
-        ex: UsernameNotFoundException,
+    @ExceptionHandler(IllegalStateException::class)
+    fun handleIllegalStateException(
+        ex: IllegalStateException,
         request: WebRequest,
     ): ResponseEntity<ErrorResponse> {
         val errorResponse = ErrorResponse(
-            status = HttpStatus.NOT_FOUND.value(),
-            error = "Not Found",
-            message = ex.message ?: "User not found",
+            status = HttpStatus.BAD_REQUEST.value(),
+            error = "Bad Request",
+            message = ex.message ?: "Invalid state",
             path = request.getDescription(false).substringAfter("uri="),
         )
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse)
-    }
-
-    @ExceptionHandler(BadCredentialsException::class)
-    fun handleBadCredentialsException(
-        ex: BadCredentialsException,
-        request: WebRequest,
-    ): ResponseEntity<ErrorResponse> {
-        val errorResponse = ErrorResponse(
-            status = HttpStatus.UNAUTHORIZED.value(),
-            error = "Unauthorized",
-            message = "Invalid username or password",
-            path = request.getDescription(false).substringAfter("uri="),
-        )
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorResponse)
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse)
     }
 
     @ExceptionHandler(MethodArgumentNotValidException::class)

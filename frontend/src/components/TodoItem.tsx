@@ -3,12 +3,13 @@ import type { Todo } from '../types';
 
 interface TodoItemProps {
   todo: Todo;
-  onToggle: (id: number) => void;
+  userName: string;
+  onToggle: (id: number, userId: number) => void;
   onEdit: (todo: Todo) => void;
-  onDelete: (id: number) => void;
+  onDelete: (id: number, userId: number) => void;
 }
 
-const TodoItem: React.FC<TodoItemProps> = ({ todo, onToggle, onEdit, onDelete }) => {
+const TodoItem: React.FC<TodoItemProps> = ({ todo, userName, onToggle, onEdit, onDelete }) => {
   const formatDate = (dateString: string | null) => {
     if (!dateString) return '';
     return new Date(dateString).toLocaleDateString('ja-JP');
@@ -29,13 +30,14 @@ const TodoItem: React.FC<TodoItemProps> = ({ todo, onToggle, onEdit, onDelete })
         <input
           type="checkbox"
           checked={todo.completed}
-          onChange={() => onToggle(todo.id)}
+          onChange={() => onToggle(todo.id, todo.userId)}
           style={styles.checkbox}
         />
         <div style={styles.details}>
           <span style={todo.completed ? styles.titleCompleted : styles.title}>
             {todo.title}
           </span>
+          <span style={styles.userName}>担当: {userName}</span>
           {todo.dueDate && (
             <span style={styles.dueDate}>
               期限: {formatDate(todo.dueDate)}
@@ -48,7 +50,7 @@ const TodoItem: React.FC<TodoItemProps> = ({ todo, onToggle, onEdit, onDelete })
         <button onClick={() => onEdit(todo)} style={styles.editButton}>
           編集
         </button>
-        <button onClick={() => onDelete(todo.id)} style={styles.deleteButton}>
+        <button onClick={() => onDelete(todo.id, todo.userId)} style={styles.deleteButton}>
           削除
         </button>
       </div>
@@ -97,6 +99,11 @@ const styles: { [key: string]: React.CSSProperties } = {
     fontSize: '1rem',
     color: '#999',
     textDecoration: 'line-through',
+  },
+  userName: {
+    fontSize: '0.875rem',
+    color: '#007bff',
+    fontWeight: 'bold',
   },
   dueDate: {
     fontSize: '0.875rem',

@@ -124,9 +124,16 @@ class TodoService(
         return applySort(filteredTodos, sort)
     }
 
-    fun findWithFilters(
-        filter: TodoFilter,
+    fun findAllWithFiltersAndSort(
+        filter: TodoFilter = TodoFilter(),
+        sort: TodoSort = TodoSort(),
     ): List<Todo> {
+        val todos = todoRepository.findAll()
+        val filteredTodos = applyFilters(todos, filter)
+        return applySort(filteredTodos, sort)
+    }
+
+    fun findWithFilters(filter: TodoFilter): List<Todo> {
         val todos = todoRepository.findAll()
         return applyFilters(todos, filter)
     }

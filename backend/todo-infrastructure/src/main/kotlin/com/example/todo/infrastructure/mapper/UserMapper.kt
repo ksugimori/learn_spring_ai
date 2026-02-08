@@ -9,8 +9,7 @@ class UserMapper {
     fun toDomain(entity: UserEntity): User {
         return User(
             id = entity.id,
-            username = entity.username,
-            password = entity.password,
+            name = entity.name,
             createdAt = entity.createdAt,
             updatedAt = entity.updatedAt,
         )
@@ -19,8 +18,7 @@ class UserMapper {
     fun toEntity(domain: User): UserEntity {
         return UserEntity(
             id = domain.id,
-            username = domain.username,
-            password = domain.password,
+            name = domain.name,
             createdAt = domain.createdAt,
             updatedAt = domain.updatedAt,
         )

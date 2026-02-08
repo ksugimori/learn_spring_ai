@@ -1,32 +1,65 @@
 import React, { useState, useEffect } from 'react';
 import type { Todo } from '../types';
+import type { User } from '../types/user';
 
 interface TodoFormProps {
   todo?: Todo;
-  onSubmit: (title: string, dueDate: string | null) => void;
+  users: User[];
+  onSubmit: (title: string, dueDate: string | null, userId: number) => void;
   onCancel: () => void;
 }
 
-const TodoForm: React.FC<TodoFormProps> = ({ todo, onSubmit, onCancel }) => {
+const TodoForm: React.FC<TodoFormProps> = ({ todo, users, onSubmit, onCancel }) => {
   const [title, setTitle] = useState('');
   const [dueDate, setDueDate] = useState('');
+  const [userId, setUserId] = useState<number | ''>('');
 
   useEffect(() => {
     if (todo) {
       setTitle(todo.title);
       setDueDate(todo.dueDate || '');
+      setUserId(todo.userId);
+    } else {
+      setTitle('');
+      setDueDate('');
+      setUserId(users.length > 0 ? users[0].id : '');
     }
-  }, [todo]);
+  }, [todo, users]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onSubmit(title, dueDate || null);
+    if (userId === '') {
+      alert('ユーザーを選択してください');
+      return;
+    }
+    onSubmit(title, dueDate || null, userId);
     setTitle('');
     setDueDate('');
+    setUserId(users.length > 0 ? users[0].id : '');
   };
 
   return (
     <form onSubmit={handleSubmit} style={styles.form}>
+      <div style={styles.formGroup}>
+        <label htmlFor="userId" style={styles.label}>
+          ユーザー
+        </label>
+        <select
+          id="userId"
+          value={userId}
+          onChange={(e) => setUserId(Number(e.target.value))}
+          required
+          style={styles.select}
+        >
+          <option value="">選択してください</option>
+          {users.map((user) => (
+            <option key={user.id} value={user.id}>
+              {user.name}
+            </option>
+          ))}
+        </select>
+      </div>
+
       <div style={styles.formGroup}>
         <label htmlFor="title" style={styles.label}>
           タイトル
@@ -94,6 +127,13 @@ const styles: { [key: string]: React.CSSProperties } = {
     border: '1px solid #ddd',
     borderRadius: '4px',
     fontSize: '1rem',
+  },
+  select: {
+    padding: '0.75rem',
+    border: '1px solid #ddd',
+    borderRadius: '4px',
+    fontSize: '1rem',
+    backgroundColor: 'white',
   },
   actions: {
     display: 'flex',

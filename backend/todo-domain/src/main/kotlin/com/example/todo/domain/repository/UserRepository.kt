@@ -9,9 +9,7 @@ import com.example.todo.domain.model.User
 interface UserRepository {
     fun findById(id: Long): User?
 
-    fun findByUsername(username: String): User?
-
-    fun existsByUsername(username: String): Boolean
+    fun findByName(name: String): User?
 
     fun save(user: User): User
 

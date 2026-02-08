@@ -38,4 +38,6 @@ interface TodoRepository {
     fun findAll(): List<Todo>
 
     fun deleteById(id: Long)
+
+    fun countByUserId(userId: Long): Long
 }

@@ -6,7 +6,6 @@ import org.slf4j.LoggerFactory
 import org.springframework.boot.CommandLineRunner
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
-import org.springframework.security.crypto.password.PasswordEncoder
 import java.time.LocalDate
 
 @Configuration
@@ -17,22 +16,15 @@ class DataInitializer {
     fun initData(
         userService: UserService,
         todoService: TodoService,
-        passwordEncoder: PasswordEncoder,
     ) = CommandLineRunner {
         logger.info("Starting sample data initialization...")
 
         // サンプルユーザーの作成
-        val demoUser = userService.createUser(
-            username = "demo",
-            encodedPassword = passwordEncoder.encode("password"),
-        )
-        logger.info("Created demo user: ${demoUser.username}")
+        val demoUser = userService.createUser(name = "demo")
+        logger.info("Created demo user: ${demoUser.name}")
 
-        val testUser = userService.createUser(
-            username = "test",
-            encodedPassword = passwordEncoder.encode("test123"),
-        )
-        logger.info("Created test user: ${testUser.username}")
+        val testUser = userService.createUser(name = "test")
+        logger.info("Created test user: ${testUser.name}")
 
         // demoユーザーのサンプルTodo
         todoService.createTodo(
@@ -81,7 +73,7 @@ class DataInitializer {
         )
 
         logger.info("Sample data initialization completed!")
-        logger.info("Demo user - username: demo, password: password")
-        logger.info("Test user - username: test, password: test123")
+        logger.info("Demo user - name: demo")
+        logger.info("Test user - name: test")
     }
 }

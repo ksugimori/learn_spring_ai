@@ -31,4 +31,6 @@ interface TodoJpaRepository : JpaRepository<TodoEntity, Long> {
         @Param("user") user: UserEntity,
         @Param("date") date: LocalDate,
     ): List<TodoEntity>
+
+    fun countByUserId(userId: Long): Long
 }

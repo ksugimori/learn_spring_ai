@@ -2,9 +2,12 @@ import apiClient from './client';
 import type { Todo, TodoRequest, TodoUpdateRequest, TodoFilter } from '../types';
 
 export const todosApi = {
-  getAll: async (filter?: TodoFilter): Promise<Todo[]> => {
+  getAll: async (filter?: TodoFilter, userId?: number): Promise<Todo[]> => {
     const params = new URLSearchParams();
 
+    if (userId !== undefined) {
+      params.append('userId', String(userId));
+    }
     if (filter?.completed !== undefined) {
       params.append('completed', String(filter.completed));
     }
@@ -31,28 +34,40 @@ export const todosApi = {
     return response.data;
   },
 
-  getById: async (id: number): Promise<Todo> => {
-    const response = await apiClient.get<Todo>(`/api/todos/${id}`);
+  getById: async (id: number, userId: number): Promise<Todo> => {
+    const response = await apiClient.get<Todo>(`/api/todos/${id}`, {
+      params: { userId },
+    });
     return response.data;
   },
 
   create: async (data: TodoRequest): Promise<Todo> => {
-    const response = await apiClient.post<Todo>('/api/todos', data);
+    const { userId, ...body } = data;
+    const response = await apiClient.post<Todo>('/api/todos', body, {
+      params: { userId },
+    });
     return response.data;
   },
 
   update: async (id: number, data: TodoUpdateRequest): Promise<Todo> => {
-    const response = await apiClient.put<Todo>(`/api/todos/${id}`, data);
+    const { userId, ...body } = data;
+    const response = await apiClient.put<Todo>(`/api/todos/${id}`, body, {
+      params: { userId },
+    });
     return response.data;
   },
 
-  toggle: async (id: number): Promise<Todo> => {
-    const response = await apiClient.patch<Todo>(`/api/todos/${id}/toggle`);
+  toggle: async (id: number, userId: number): Promise<Todo> => {
+    const response = await apiClient.patch<Todo>(`/api/todos/${id}/toggle`, null, {
+      params: { userId },
+    });
     return response.data;
   },
 
-  delete: async (id: number): Promise<void> => {
-    await apiClient.delete(`/api/todos/${id}`);
+  delete: async (id: number, userId: number): Promise<void> => {
+    await apiClient.delete(`/api/todos/${id}`, {
+      params: { userId },
+    });
   },
 
   getCompleted: async (): Promise<Todo[]> => {

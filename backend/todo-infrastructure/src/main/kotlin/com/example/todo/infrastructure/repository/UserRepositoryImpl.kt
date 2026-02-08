@@ -17,13 +17,9 @@ class UserRepositoryImpl(
             .orElse(null)
     }
 
-    override fun findByUsername(username: String): User? {
-        return jpaRepository.findByUsername(username)
+    override fun findByName(name: String): User? {
+        return jpaRepository.findByName(name)
             ?.let { mapper.toDomain(it) }
-    }
-
-    override fun existsByUsername(username: String): Boolean {
-        return jpaRepository.existsByUsername(username)
     }
 
     override fun save(user: User): User {
