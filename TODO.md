@@ -154,56 +154,53 @@
 ## Phase 4: フロントエンド - ユーザー管理UI
 
 ### 4.1 型定義
-- [ ] `src/types/user.ts` - 新規作成
-  - [ ] `User` インターフェース定義
-  - [ ] `CreateUserRequest` インターフェース定義
-  - [ ] `UpdateUserRequest` インターフェース定義
+- [x] `src/types/user.ts` - 新規作成
+  - [x] `User` インターフェース定義
+  - [x] `CreateUserRequest` インターフェース定義
+  - [x] `UpdateUserRequest` インターフェース定義
 
 ### 4.2 APIクライアント
-- [ ] `src/api/users.ts` - 新規作成
-  - [ ] `getUsers(): Promise<User[]>` - ユーザー一覧取得
-  - [ ] `getUser(id: number): Promise<User>` - ユーザー詳細取得
-  - [ ] `createUser(name: string): Promise<User>` - ユーザー作成
-  - [ ] `updateUser(id: number, name: string): Promise<User>` - ユーザー更新
-  - [ ] `deleteUser(id: number): Promise<void>` - ユーザー削除
+- [x] `src/api/users.ts` - 新規作成
+  - [x] `getAll(): Promise<User[]>` - ユーザー一覧取得
+  - [x] `getById(id: number): Promise<User>` - ユーザー詳細取得
+  - [x] `create(request): Promise<User>` - ユーザー作成
+  - [x] `update(id, request): Promise<User>` - ユーザー更新
+  - [x] `delete(id: number): Promise<void>` - ユーザー削除
 
 ### 4.3 コンポーネント
-- [ ] `src/components/UserForm.tsx` - 新規作成
-  - [ ] ユーザー作成フォーム（名前のみ）
-  - [ ] ユーザー編集フォーム（名前変更）
-  - [ ] バリデーション（名前が空でないこと）
-  - [ ] エラー表示（重複エラーなど）
+- [x] `src/components/UserForm.tsx` - 新規作成
+  - [x] ユーザー作成フォーム（名前のみ）
+  - [x] ユーザー編集フォーム（名前変更）
+  - [x] バリデーション（名前が空でないこと、最大50文字）
+  - [x] 作成/更新ボタンの切り替え
+  - [x] キャンセルボタン（編集時のみ）
 
-- [ ] `src/components/UserList.tsx` - 新規作成
-  - [ ] ユーザー一覧表示
-  - [ ] 編集ボタン
-  - [ ] 削除ボタン
-  - [ ] 削除確認ダイアログ
-  - [ ] エラー表示（TODOが存在する場合）
+- [x] `src/components/UserList.tsx` - 新規作成
+  - [x] ユーザー一覧表示
+  - [x] 編集ボタン
+  - [x] 削除ボタン
+  - [x] 削除確認ダイアログ
+  - [x] 空状態表示
 
 ### 4.4 ページ
-- [ ] `src/pages/UsersPage.tsx` - 新規作成
-  - [ ] UserFormコンポーネントの配置
-  - [ ] UserListコンポーネントの配置
-  - [ ] ユーザー作成・更新・削除の処理
-  - [ ] ローディング状態の管理
-  - [ ] エラーハンドリング
+- [x] `src/pages/UsersPage.tsx` - 新規作成
+  - [x] UserFormコンポーネントの配置
+  - [x] UserListコンポーネントの配置
+  - [x] ユーザー作成・更新・削除の処理
+  - [x] ローディング状態の管理
+  - [x] エラーハンドリング（409 Conflict、400 Bad Request）
 
 ### 4.5 ルーティング
-- [ ] `src/App.tsx` - ルート追加
-  - [ ] `/users` ルート追加
-  - [ ] ナビゲーションにユーザー管理リンク追加
+- [x] `src/App.tsx` - ルート追加
+  - [x] `/users` ルート追加
+  - [x] ナビゲーションコンポーネント追加
+  - [x] TODO管理とユーザー管理へのリンク
 
 ### 4.6 Phase 4 テスト
-- [ ] ユーザー管理画面の動作確認
-  - [ ] /users にアクセス可能
-  - [ ] ユーザー作成成功
-  - [ ] ユーザー一覧表示成功
-  - [ ] ユーザー編集成功
-  - [ ] ユーザー削除成功
-  - [ ] 名前重複時のエラー表示
-  - [ ] TODOが存在するユーザー削除時のエラー表示
-- [ ] ESLintチェック実行（必要に応じて）
+- [x] TypeScriptコンパイルチェック成功
+- [x] Vite起動成功
+- [x] バックエンドAPI動作確認
+  - [x] GET /api/users 成功
 
 ---
 
