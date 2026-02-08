@@ -65,45 +65,49 @@
 ## Phase 2: バックエンド - ユーザー管理API
 
 ### 2.1 ドメイン層 (todo-domain)
-- [ ] `UserService.kt` - サービス層実装
-  - [ ] `createUser(name: String): User` - ユーザー作成
-  - [ ] `getAllUsers(): List<User>` - 全ユーザー取得
-  - [ ] `getUserById(id: Long): User` - ID指定取得
-  - [ ] `updateUser(id: Long, name: String): User` - ユーザー名更新
-  - [ ] `deleteUser(id: Long)` - ユーザー削除
-  - [ ] 名前重複チェックロジック
-  - [ ] TODO存在チェックロジック（削除時）
+- [x] `UserService.kt` - サービス層実装
+  - [x] `createUser(name: String): User` - ユーザー作成（Phase 1で実装済み）
+  - [x] `getAllUsers(): List<User>` - 全ユーザー取得（findAllとして実装済み）
+  - [x] `getUserById(id: Long): User` - ID指定取得（findByIdとして実装済み）
+  - [x] `updateUser(id: Long, name: String): User` - ユーザー名更新
+  - [x] `deleteUser(id: Long)` - ユーザー削除（TODO存在チェック追加）
+  - [x] 名前重複チェックロジック
+  - [x] TODO存在チェックロジック（削除時）
+- [x] `TodoRepository.kt` - インターフェース拡張
+  - [x] `countByUserId(userId: Long): Long` 追加
 
 ### 2.2 インフラストラクチャ層 (todo-infrastructure)
-- [ ] `TodoRepository` - メソッド追加
-  - [ ] `countByUserId(userId: Long): Long` 追加（ユーザー削除チェック用）
+- [x] `TodoJpaRepository.kt` - メソッド追加
+  - [x] `countByUserId(userId: Long): Long` 追加
+- [x] `TodoRepositoryImpl.kt` - 実装追加
+  - [x] `countByUserId(userId: Long): Long` 実装
 
 ### 2.3 API層 (todo-api)
-- [ ] `UserController.kt` - 新規作成
-  - [ ] `POST /api/users` - ユーザー作成
-  - [ ] `GET /api/users` - ユーザー一覧取得
-  - [ ] `GET /api/users/{id}` - ユーザー詳細取得
-  - [ ] `PUT /api/users/{id}` - ユーザー名変更
-  - [ ] `DELETE /api/users/{id}` - ユーザー削除
-- [ ] DTO作成
-  - [ ] `CreateUserRequest.kt` - `name: String`
-  - [ ] `UpdateUserRequest.kt` - `name: String`
-  - [ ] `UserResponse.kt` - `id: Long, name: String`
-- [ ] 例外処理
-  - [ ] 名前重複時のエラー処理（409 Conflict）
-  - [ ] TODO存在時の削除エラー処理（400 Bad Request）
-  - [ ] ユーザーが見つからない場合のエラー処理（404 Not Found）
+- [x] `UserController.kt` - 新規作成
+  - [x] `POST /api/users` - ユーザー作成
+  - [x] `GET /api/users` - ユーザー一覧取得
+  - [x] `GET /api/users/{id}` - ユーザー詳細取得
+  - [x] `PUT /api/users/{id}` - ユーザー名変更
+  - [x] `DELETE /api/users/{id}` - ユーザー削除
+- [x] DTO作成
+  - [x] `CreateUserRequest.kt` - `name: String`
+  - [x] `UpdateUserRequest.kt` - `name: String`
+  - [x] `UserResponse.kt` - `id: Long, name: String, createdAt, updatedAt`
+- [x] 例外処理
+  - [x] 名前重複時のエラー処理（409 Conflict）
+  - [x] TODO存在時の削除エラー処理（400 Bad Request）
+  - [x] ユーザーが見つからない場合のエラー処理（404 Not Found）
 
 ### 2.4 Phase 2 テスト
-- [ ] ユーザーAPI動作確認
-  - [ ] POST /api/users - ユーザー作成成功
-  - [ ] GET /api/users - ユーザー一覧取得成功
-  - [ ] GET /api/users/{id} - ユーザー詳細取得成功
-  - [ ] PUT /api/users/{id} - ユーザー名更新成功
-  - [ ] DELETE /api/users/{id} - ユーザー削除成功
-  - [ ] 名前重複時に409エラー
-  - [ ] TODOが存在するユーザー削除時に400エラー
-- [ ] ktlintチェック実行（必要に応じて）
+- [x] ユーザーAPI動作確認
+  - [x] POST /api/users - ユーザー作成成功
+  - [x] GET /api/users - ユーザー一覧取得成功
+  - [x] GET /api/users/{id} - ユーザー詳細取得成功
+  - [x] PUT /api/users/{id} - ユーザー名更新成功
+  - [x] DELETE /api/users/{id} - ユーザー削除成功
+  - [x] 名前重複時に409エラー
+  - [x] TODOが存在するユーザー削除時に400エラー
+- [x] ktlintチェック実行
 
 ---
 

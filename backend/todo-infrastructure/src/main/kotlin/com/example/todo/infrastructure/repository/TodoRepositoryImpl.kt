@@ -88,4 +88,8 @@ class TodoRepositoryImpl(
     override fun deleteById(id: Long) {
         todoJpaRepository.deleteById(id)
     }
+
+    override fun countByUserId(userId: Long): Long {
+        return todoJpaRepository.countByUserId(userId)
+    }
 }
