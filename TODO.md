@@ -114,35 +114,40 @@
 ## Phase 3: フロントエンド - 認証削除
 
 ### 3.1 認証関連ファイルの削除
-- [ ] `src/contexts/AuthContext.tsx` - 削除
-- [ ] `src/pages/LoginPage.tsx` - 削除
-- [ ] `src/pages/RegisterPage.tsx` - 削除
-- [ ] `src/types/auth.ts` - 削除（存在する場合）
+- [x] `src/contexts/AuthContext.tsx` - 削除
+- [x] `src/pages/LoginPage.tsx` - 削除
+- [x] `src/pages/RegisterPage.tsx` - 削除
+- [x] `src/types/auth.ts` - 削除（存在しなかった）
+- [x] `src/api/auth.ts` - 削除
 
 ### 3.2 API設定の更新
-- [ ] `src/api/axios.ts` または類似ファイル - 認証ヘッダー削除
-  - [ ] Axiosインターセプターの認証ヘッダー設定を削除
-  - [ ] LocalStorageからのトークン取得処理を削除
-  - [ ] 401エラーハンドリングの削除
+- [x] `src/api/client.ts` - 認証ヘッダー削除
+  - [x] Axiosインターセプターの認証ヘッダー設定を削除
+  - [x] LocalStorageからのトークン取得処理を削除
+  - [x] 401エラーハンドリングの削除
 
 ### 3.3 ルーティング設定の更新
-- [ ] `src/App.tsx` - ルート更新
-  - [ ] `/login` ルート削除
-  - [ ] `/register` ルート削除
-  - [ ] AuthContext.Providerの削除
-  - [ ] デフォルトルートを `/todos` に変更
-  - [ ] 認証ガードの削除（あれば）
+- [x] `src/App.tsx` - ルート更新
+  - [x] `/login` ルート削除
+  - [x] `/register` ルート削除
+  - [x] AuthContext.Providerの削除
+  - [x] デフォルトルートを `/todos` に変更
+  - [x] 認証ガード（PrivateRoute、PublicRoute）の削除
 
-### 3.4 ナビゲーション・ヘッダーの更新
-- [ ] ログイン/ログアウトボタンの削除
-- [ ] ユーザー表示の削除
+### 3.4 ページの更新
+- [x] `src/pages/TodoListPage.tsx` - 認証関連コード削除
+  - [x] useAuthのimport削除
+  - [x] logout、username削除
+  - [x] handleLogout関数削除
+  - [x] ヘッダーのログイン/ログアウトボタン削除
+  - [x] ユーザー表示削除
 
 ### 3.5 Phase 3 テスト
-- [ ] フロントエンド起動確認
-  - [ ] npm run dev で起動成功
-  - [ ] コンパイルエラーがないこと
-  - [ ] デフォルトルートが /todos であること
-- [ ] 認証関連のコードが完全に削除されていること確認
+- [x] フロントエンド起動確認
+  - [x] npm run dev で起動成功
+  - [x] TypeScriptコンパイルエラーがないこと
+  - [x] デフォルトルートが /todos であること
+- [x] 認証関連のコードが完全に削除されていること確認
 
 ---
 

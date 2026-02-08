@@ -1,6 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../contexts/AuthContext';
 import { todosApi } from '../api/todos';
 import type { Todo, TodoFilter } from '../types';
 import TodoItem from '../components/TodoItem';
@@ -15,9 +13,6 @@ const TodoListPage: React.FC = () => {
   const [filterCompleted, setFilterCompleted] = useState<boolean | undefined>(undefined);
   const [sortBy, setSortBy] = useState('CREATED_AT');
   const [sortDirection, setSortDirection] = useState<'ASC' | 'DESC'>('DESC');
-
-  const { logout, username } = useAuth();
-  const navigate = useNavigate();
 
   const fetchTodos = async () => {
     setLoading(true);
@@ -85,11 +80,6 @@ const TodoListPage: React.FC = () => {
     }
   };
 
-  const handleLogout = async () => {
-    await logout();
-    navigate('/login');
-  };
-
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     fetchTodos();
@@ -99,12 +89,6 @@ const TodoListPage: React.FC = () => {
     <div style={styles.container}>
       <header style={styles.header}>
         <h1>Todo App</h1>
-        <div style={styles.userInfo}>
-          <span>ようこそ、{username}さん</span>
-          <button onClick={handleLogout} style={styles.logoutButton}>
-            ログアウト
-          </button>
-        </div>
       </header>
 
       <div style={styles.content}>
@@ -202,22 +186,6 @@ const styles: { [key: string]: React.CSSProperties } = {
     backgroundColor: '#007bff',
     color: 'white',
     padding: '1rem 2rem',
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  userInfo: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '1rem',
-  },
-  logoutButton: {
-    padding: '0.5rem 1rem',
-    backgroundColor: 'white',
-    color: '#007bff',
-    border: 'none',
-    borderRadius: '4px',
-    cursor: 'pointer',
   },
   content: {
     maxWidth: '800px',
