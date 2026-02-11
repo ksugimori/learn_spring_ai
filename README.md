@@ -51,14 +51,7 @@ make dev
 # または
 make start
 
-# バックエンドのみ起動
-make backend
-
-# フロントエンドのみ起動
-make frontend
-
-# アプリケーションを停止
-make stop
+# 停止するには Ctrl+C を押す
 
 # ヘルプを表示
 make help

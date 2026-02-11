@@ -1,4 +1,4 @@
-.PHONY: help dev start backend frontend stop clean install lint lint-fix
+.PHONY: help dev start clean install lint lint-fix build test
 
 # デフォルトターゲット
 .DEFAULT_GOAL := help
@@ -31,14 +31,6 @@ dev: ## フロントエンドとバックエンドを並列起動（開発モー
 	wait
 
 start: dev ## devのエイリアス
-
-backend: ## バックエンドのみ起動
-	@echo "🚀 バックエンドを起動中..."
-	cd backend && ./gradlew :todo-api:bootRun
-
-frontend: ## フロントエンドのみ起動
-	@echo "🎨 フロントエンドを起動中..."
-	cd frontend && npm run dev
 
 install: ## 依存関係をインストール
 	@echo "📥 フロントエンド依存関係をインストール中..."
@@ -78,14 +70,3 @@ clean: ## ビルド成果物をクリーンアップ
 	cd backend && ./gradlew clean
 	cd frontend && rm -rf dist node_modules/.vite
 	@echo "✅ クリーンアップ完了"
-
-stop: ## 起動中のプロセスを停止
-	@echo "🛑 アプリケーションを停止中..."
-	@pkill -f "todo-api:bootRun" || true
-	@pkill -f "vite" || true
-	@echo "✅ 停止完了"
-
-status: ## 起動中のプロセスを確認
-	@echo "📊 起動中のプロセス:"
-	@pgrep -fl "todo-api:bootRun" || echo "  バックエンド: 停止中"
-	@pgrep -fl "vite" || echo "  フロントエンド: 停止中"
