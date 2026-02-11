@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
+import { isAxiosError } from 'axios';
 import { todosApi } from '../api/todos';
 import { usersApi } from '../api/users';
 import type { Todo, TodoFilter } from '../types';
@@ -18,16 +19,20 @@ const TodoListPage: React.FC = () => {
   const [sortBy, setSortBy] = useState('CREATED_AT');
   const [sortDirection, setSortDirection] = useState<'ASC' | 'DESC'>('DESC');
 
-  const fetchUsers = async () => {
+  const fetchUsers = useCallback(async () => {
     try {
       const data = await usersApi.getAll();
       setUsers(data);
-    } catch (err: any) {
-      setError(err.response?.data?.message || 'ユーザーの取得に失敗しました');
+    } catch (err: unknown) {
+      if (isAxiosError(err)) {
+        setError(err.response?.data?.message || 'ユーザーの取得に失敗しました');
+      } else {
+        setError('ユーザーの取得に失敗しました');
+      }
     }
-  };
+  }, []);
 
-  const fetchTodos = async () => {
+  const fetchTodos = useCallback(async () => {
     setLoading(true);
     setError('');
 
@@ -41,27 +46,35 @@ const TodoListPage: React.FC = () => {
 
       const data = await todosApi.getAll(filter, filterUserId);
       setTodos(data);
-    } catch (err: any) {
-      setError(err.response?.data?.message || 'Todoの取得に失敗しました');
+    } catch (err: unknown) {
+      if (isAxiosError(err)) {
+        setError(err.response?.data?.message || 'Todoの取得に失敗しました');
+      } else {
+        setError('Todoの取得に失敗しました');
+      }
     } finally {
       setLoading(false);
     }
-  };
+  }, [keyword, filterCompleted, filterUserId, sortBy, sortDirection]);
 
   useEffect(() => {
     fetchUsers();
-  }, []);
+  }, [fetchUsers]);
 
   useEffect(() => {
     fetchTodos();
-  }, [filterCompleted, filterUserId, sortBy, sortDirection]);
+  }, [fetchTodos]);
 
   const handleCreateTodo = async (title: string, dueDate: string | null, userId: number) => {
     try {
       await todosApi.create({ title, dueDate: dueDate || undefined, userId });
       fetchTodos();
-    } catch (err: any) {
-      setError(err.response?.data?.message || 'Todoの作成に失敗しました');
+    } catch (err: unknown) {
+      if (isAxiosError(err)) {
+        setError(err.response?.data?.message || 'Todoの作成に失敗しました');
+      } else {
+        setError('Todoの作成に失敗しました');
+      }
     }
   };
 
@@ -72,8 +85,12 @@ const TodoListPage: React.FC = () => {
       await todosApi.update(editingTodo.id, { title, dueDate: dueDate || undefined, userId });
       setEditingTodo(null);
       fetchTodos();
-    } catch (err: any) {
-      setError(err.response?.data?.message || 'Todoの更新に失敗しました');
+    } catch (err: unknown) {
+      if (isAxiosError(err)) {
+        setError(err.response?.data?.message || 'Todoの更新に失敗しました');
+      } else {
+        setError('Todoの更新に失敗しました');
+      }
     }
   };
 
@@ -81,8 +98,12 @@ const TodoListPage: React.FC = () => {
     try {
       await todosApi.toggle(id, userId);
       fetchTodos();
-    } catch (err: any) {
-      setError(err.response?.data?.message || 'Todoの更新に失敗しました');
+    } catch (err: unknown) {
+      if (isAxiosError(err)) {
+        setError(err.response?.data?.message || 'Todoの更新に失敗しました');
+      } else {
+        setError('Todoの更新に失敗しました');
+      }
     }
   };
 
@@ -92,8 +113,12 @@ const TodoListPage: React.FC = () => {
     try {
       await todosApi.delete(id, userId);
       fetchTodos();
-    } catch (err: any) {
-      setError(err.response?.data?.message || 'Todoの削除に失敗しました');
+    } catch (err: unknown) {
+      if (isAxiosError(err)) {
+        setError(err.response?.data?.message || 'Todoの削除に失敗しました');
+      } else {
+        setError('Todoの削除に失敗しました');
+      }
     }
   };
 
@@ -112,6 +137,7 @@ const TodoListPage: React.FC = () => {
         {error && <div style={styles.error}>{error}</div>}
 
         <TodoForm
+          key={editingTodo?.id || 'new'}
           todo={editingTodo || undefined}
           users={users}
           onSubmit={editingTodo ? handleUpdateTodo : handleCreateTodo}

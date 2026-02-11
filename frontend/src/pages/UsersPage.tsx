@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
+import { isAxiosError } from 'axios';
 import { usersApi } from '../api/users';
 import type { User } from '../types/user';
 import UserForm from '../components/UserForm';
@@ -10,34 +11,42 @@ const UsersPage: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
-  const fetchUsers = async () => {
+  const fetchUsers = useCallback(async () => {
     setLoading(true);
     setError('');
 
     try {
       const data = await usersApi.getAll();
       setUsers(data);
-    } catch (err: any) {
-      setError(err.response?.data?.message || 'ユーザーの取得に失敗しました');
+    } catch (err: unknown) {
+      if (isAxiosError(err)) {
+        setError(err.response?.data?.message || 'ユーザーの取得に失敗しました');
+      } else {
+        setError('ユーザーの取得に失敗しました');
+      }
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
   useEffect(() => {
     fetchUsers();
-  }, []);
+  }, [fetchUsers]);
 
   const handleCreateUser = async (name: string) => {
     try {
       await usersApi.create({ name });
       fetchUsers();
       setError('');
-    } catch (err: any) {
-      if (err.response?.status === 409) {
-        setError('このユーザー名は既に使用されています');
+    } catch (err: unknown) {
+      if (isAxiosError(err)) {
+        if (err.response?.status === 409) {
+          setError('このユーザー名は既に使用されています');
+        } else {
+          setError(err.response?.data?.message || 'ユーザーの作成に失敗しました');
+        }
       } else {
-        setError(err.response?.data?.message || 'ユーザーの作成に失敗しました');
+        setError('ユーザーの作成に失敗しました');
       }
     }
   };
@@ -50,11 +59,15 @@ const UsersPage: React.FC = () => {
       setEditingUser(null);
       fetchUsers();
       setError('');
-    } catch (err: any) {
-      if (err.response?.status === 409) {
-        setError('このユーザー名は既に使用されています');
+    } catch (err: unknown) {
+      if (isAxiosError(err)) {
+        if (err.response?.status === 409) {
+          setError('このユーザー名は既に使用されています');
+        } else {
+          setError(err.response?.data?.message || 'ユーザーの更新に失敗しました');
+        }
       } else {
-        setError(err.response?.data?.message || 'ユーザーの更新に失敗しました');
+        setError('ユーザーの更新に失敗しました');
       }
     }
   };
@@ -64,11 +77,15 @@ const UsersPage: React.FC = () => {
       await usersApi.delete(id);
       fetchUsers();
       setError('');
-    } catch (err: any) {
-      if (err.response?.status === 400) {
-        setError('このユーザーにはTODOが存在するため削除できません');
+    } catch (err: unknown) {
+      if (isAxiosError(err)) {
+        if (err.response?.status === 400) {
+          setError('このユーザーにはTODOが存在するため削除できません');
+        } else {
+          setError(err.response?.data?.message || 'ユーザーの削除に失敗しました');
+        }
       } else {
-        setError(err.response?.data?.message || 'ユーザーの削除に失敗しました');
+        setError('ユーザーの削除に失敗しました');
       }
     }
   };
@@ -83,6 +100,7 @@ const UsersPage: React.FC = () => {
         {error && <div style={styles.error}>{error}</div>}
 
         <UserForm
+          key={editingUser?.id || 'new'}
           user={editingUser || undefined}
           onSubmit={editingUser ? handleUpdateUser : handleCreateUser}
           onCancel={() => setEditingUser(null)}
