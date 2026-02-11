@@ -38,8 +38,35 @@ Spring AI の使い方を学ぶために作成した Todo アプリケーショ�
 - Java 17以上
 - Node.js 16以上
 - npm または yarn
+- make（オプション）
 
-### バックエンドの起動
+### 簡単な起動方法（Makefileを使用）
+
+```bash
+# 依存関係をインストール（初回のみ）
+make install
+
+# フロントエンドとバックエンドを同時に起動
+make dev
+# または
+make start
+
+# バックエンドのみ起動
+make backend
+
+# フロントエンドのみ起動
+make frontend
+
+# アプリケーションを停止
+make stop
+
+# ヘルプを表示
+make help
+```
+
+### 手動での起動
+
+#### バックエンドの起動
 
 ```bash
 cd backend
@@ -48,7 +75,7 @@ cd backend
 
 バックエンドは `http://localhost:8080` で起動します。
 
-### フロントエンドの起動
+#### フロントエンドの起動
 
 ```bash
 cd frontend
