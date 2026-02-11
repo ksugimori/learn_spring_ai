@@ -23,4 +23,8 @@ dependencies {
 
     // Spring AI MCP Server with WebMVC (Streaming-HTTP) support
     implementation("org.springframework.ai:spring-ai-starter-mcp-server-webmvc:1.1.2")
+
+    // Test dependencies
+    testImplementation("org.springframework.boot:spring-boot-starter-test")
+    testImplementation("org.mockito.kotlin:mockito-kotlin:5.2.1")
 }
