@@ -23,6 +23,7 @@ describe('TodoItem', () => {
     render(
       <TodoItem
         todo={mockTodo}
+        userName="Test User"
         onToggle={mockOnToggle}
         onEdit={mockOnEdit}
         onDelete={mockOnDelete}
@@ -40,6 +41,7 @@ describe('TodoItem', () => {
     render(
       <TodoItem
         todo={mockTodo}
+        userName="Test User"
         onToggle={mockOnToggle}
         onEdit={mockOnEdit}
         onDelete={mockOnDelete}
@@ -49,7 +51,7 @@ describe('TodoItem', () => {
     const checkbox = screen.getByRole('checkbox');
     await userEvent.click(checkbox);
 
-    expect(mockOnToggle).toHaveBeenCalledWith(1);
+    expect(mockOnToggle).toHaveBeenCalledWith(1, 1);
   });
 
   it('calls onEdit when edit button is clicked', async () => {
@@ -60,6 +62,7 @@ describe('TodoItem', () => {
     render(
       <TodoItem
         todo={mockTodo}
+        userName="Test User"
         onToggle={mockOnToggle}
         onEdit={mockOnEdit}
         onDelete={mockOnDelete}
@@ -80,6 +83,7 @@ describe('TodoItem', () => {
     render(
       <TodoItem
         todo={mockTodo}
+        userName="Test User"
         onToggle={mockOnToggle}
         onEdit={mockOnEdit}
         onDelete={mockOnDelete}
@@ -89,7 +93,7 @@ describe('TodoItem', () => {
     const deleteButton = screen.getByText('削除');
     await userEvent.click(deleteButton);
 
-    expect(mockOnDelete).toHaveBeenCalledWith(1);
+    expect(mockOnDelete).toHaveBeenCalledWith(1, 1);
   });
 
   it('displays due date when provided', () => {
@@ -104,6 +108,7 @@ describe('TodoItem', () => {
     render(
       <TodoItem
         todo={todoWithDueDate}
+        userName="Test User"
         onToggle={mockOnToggle}
         onEdit={mockOnEdit}
         onDelete={mockOnDelete}
