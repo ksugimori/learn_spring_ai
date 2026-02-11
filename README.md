@@ -64,6 +64,25 @@ make stop
 make help
 ```
 
+### 開発ツール
+
+```bash
+# テストを実行
+make test
+
+# Lintチェックを実行
+make lint
+
+# Lintエラーを自動修正
+make lint-fix
+
+# ビルドを実行
+make build
+
+# クリーンアップ
+make clean
+```
+
 ### 手動での起動
 
 #### バックエンドの起動
