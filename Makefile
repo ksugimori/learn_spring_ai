@@ -9,15 +9,22 @@ help: ## ヘルプを表示
 
 dev: ## フロントエンドとバックエンドを並列起動（開発モード）
 	@echo "📦 アプリケーションを起動中..."
-	@echo ""
-	@echo "🎨 フロントエンド: http://localhost:5173/"
-	@echo "🚀 バックエンド MCP サーバー: http://localhost:8080/"
-	@echo ""
-	@echo "停止するには Ctrl+C を押してください"
-	@echo ""
 	@trap 'kill 0' INT; \
 	(cd backend && ./gradlew :todo-api:bootRun) & \
+	BACKEND_PID=$$!; \
 	(cd frontend && npm run dev) & \
+	FRONTEND_PID=$$!; \
+	sleep 8; \
+	echo ""; \
+	echo "════════════════════════════════════════════════════"; \
+	echo "✅ アプリケーションが起動しました"; \
+	echo ""; \
+	echo "🎨 フロントエンド: http://localhost:5173/"; \
+	echo "🚀 バックエンド MCP サーバー: http://localhost:8080/mcp"; \
+	echo ""; \
+	echo "停止するには Ctrl+C を押してください"; \
+	echo "════════════════════════════════════════════════════"; \
+	echo ""; \
 	wait
 
 start: dev ## devのエイリアス
