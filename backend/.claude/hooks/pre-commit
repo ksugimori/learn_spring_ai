@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Pre-commit hook for root directory
+# Pre-commit hook for backend directory
 # Delegates to the common pre-commit checks script
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
