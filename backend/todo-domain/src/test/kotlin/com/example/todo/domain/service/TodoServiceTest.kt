@@ -19,7 +19,7 @@ class TodoServiceTest {
     fun setup() {
         todoRepository = mock()
         todoService = TodoService(todoRepository)
-        testUser = User(id = 1L, username = "testuser", password = "password")
+        testUser = User(id = 1L, name = "testuser")
     }
 
     @Test
@@ -69,7 +69,7 @@ class TodoServiceTest {
 
     @Test
     fun `updateTodo should throw exception when user not authorized`() {
-        val otherUser = User(id = 2L, username = "otheruser", password = "password")
+        val otherUser = User(id = 2L, name = "otheruser")
         val todo = Todo(id = 1L, title = "Todo", user = otherUser)
         whenever(todoRepository.findById(1L)).thenReturn(todo)
 
@@ -104,7 +104,7 @@ class TodoServiceTest {
 
     @Test
     fun `deleteTodo should throw exception when user not authorized`() {
-        val otherUser = User(id = 2L, username = "otheruser", password = "password")
+        val otherUser = User(id = 2L, name = "otheruser")
         val todo = Todo(id = 1L, title = "Todo", user = otherUser)
         whenever(todoRepository.findById(1L)).thenReturn(todo)
 
