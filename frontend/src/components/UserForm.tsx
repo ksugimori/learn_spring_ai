@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import type { User } from '../types/user';
 
 interface UserFormProps {
@@ -8,15 +8,7 @@ interface UserFormProps {
 }
 
 const UserForm: React.FC<UserFormProps> = ({ user, onSubmit, onCancel }) => {
-  const [name, setName] = useState('');
-
-  useEffect(() => {
-    if (user) {
-      setName(user.name);
-    } else {
-      setName('');
-    }
-  }, [user]);
+  const [name, setName] = useState(user?.name || '');
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();

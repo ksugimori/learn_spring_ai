@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import type { Todo } from '../types';
 import type { User } from '../types/user';
 
@@ -10,21 +10,9 @@ interface TodoFormProps {
 }
 
 const TodoForm: React.FC<TodoFormProps> = ({ todo, users, onSubmit, onCancel }) => {
-  const [title, setTitle] = useState('');
-  const [dueDate, setDueDate] = useState('');
-  const [userId, setUserId] = useState<number | ''>('');
-
-  useEffect(() => {
-    if (todo) {
-      setTitle(todo.title);
-      setDueDate(todo.dueDate || '');
-      setUserId(todo.userId);
-    } else {
-      setTitle('');
-      setDueDate('');
-      setUserId(users.length > 0 ? users[0].id : '');
-    }
-  }, [todo, users]);
+  const [title, setTitle] = useState(todo?.title || '');
+  const [dueDate, setDueDate] = useState(todo?.dueDate || '');
+  const [userId, setUserId] = useState<number | ''>(todo?.userId || (users.length > 0 ? users[0].id : ''));
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
