@@ -56,7 +56,7 @@ class UserServiceTest {
     fun `findAll should return all users`() {
         val users = listOf(
             User(id = 1L, name = "user1"),
-            User(id = 2L, name = "user2")
+            User(id = 2L, name = "user2"),
         )
         whenever(userRepository.findAll()).thenReturn(users)
 

@@ -1,4 +1,4 @@
-.PHONY: help dev start backend frontend stop clean install
+.PHONY: help dev start backend frontend stop clean install lint lint-fix
 
 # デフォルトターゲット
 .DEFAULT_GOAL := help
@@ -42,6 +42,20 @@ test: ## テストを実行
 	@echo "🧪 フロントエンドテストを実行中..."
 	cd frontend && npm test
 	@echo "✅ テスト完了"
+
+lint: ## Lintチェックを実行（バックエンド: ktlint、フロントエンド: ESLint）
+	@echo "🔍 バックエンドのLintチェックを実行中..."
+	cd backend && ./gradlew ktlintCheck
+	@echo "🔍 フロントエンドのLintチェックを実行中..."
+	cd frontend && npm run lint
+	@echo "✅ Lintチェック完了"
+
+lint-fix: ## Lintエラーを自動修正（バックエンド: ktlint format、フロントエンド: ESLint fix）
+	@echo "🔧 バックエンドのLintエラーを修正中..."
+	cd backend && ./gradlew ktlintFormat
+	@echo "🔧 フロントエンドのLintエラーを修正中..."
+	cd frontend && npm run lint -- --fix
+	@echo "✅ Lint修正完了"
 
 clean: ## ビルド成果物をクリーンアップ
 	@echo "🧹 クリーンアップ中..."
