@@ -5,41 +5,44 @@
 ```
 frontend/src/
 ├── api/
-│   ├── client.ts     # Axios設定（JWT自動付与、401エラー処理）
-│   ├── auth.ts       # authApi: login, register, logout
+│   ├── client.ts     # Axios設定
+│   ├── users.ts      # usersApi: ユーザーCRUD操作
 │   └── todos.ts      # todosApi: CRUD + フィルタ対応
 ├── components/
 │   ├── TodoItem.tsx  # Todo表示（チェックボックス、編集・削除ボタン、期限切れハイライト）
-│   └── TodoForm.tsx  # Todo作成・編集フォーム
-├── contexts/
-│   └── AuthContext.tsx # 認証状態管理（isAuthenticated, username, login/register/logout）
+│   ├── TodoForm.tsx  # Todo作成・編集フォーム（ユーザー選択付き）
+│   ├── UserForm.tsx  # ユーザー作成・編集フォーム
+│   ├── UserList.tsx  # ユーザー一覧・編集・削除
+│   └── NavBar.tsx    # ナビゲーションバー
 ├── pages/
-│   ├── LoginPage.tsx    # ログイン画面
-│   ├── RegisterPage.tsx # 登録画面（パスワード確認付き）
-│   └── TodoListPage.tsx # Todo一覧・CRUD・検索・フィルタ・ソート
+│   ├── TodoListPage.tsx # Todo一覧・CRUD・検索・フィルタ・ソート
+│   └── UsersPage.tsx    # ユーザー管理画面
 ├── types/
 │   └── index.ts      # TypeScript型定義（User, Todo, Request/Response型）
-└── App.tsx           # ルーティング（PrivateRoute, PublicRoute）
+└── App.tsx           # ルーティング
 ```
 
 ## 主要コンポーネント
 
-**認証:**
-- `AuthContext`: LocalStorageでトークン永続化、グローバル認証状態
-- `PrivateRoute`: 認証済みのみアクセス可、未認証は/loginへ
-- `PublicRoute`: 未認証のみアクセス可、認証済みは/へ
+**ユーザー管理:**
+- `UsersPage`: ユーザーの作成、編集、削除機能
+- `UserForm`: ユーザー作成・編集フォーム（名前の重複チェック）
+- `UserList`: ユーザー一覧表示、編集・削除アクション
 
 **API通信:**
-- `client.ts`: Axiosインターセプターで全リクエストにJWT自動付与、401エラーで自動ログアウト
-- `auth.ts`, `todos.ts`: 型安全なAPI関数
+- `client.ts`: Axiosインスタンス設定
+- `users.ts`: ユーザーCRUD API関数
+- `todos.ts`: Todo CRUD + フィルタ API関数
 
 **ページ:**
 - `TodoListPage`: useState でローカル状態管理、useEffect でデータフェッチ
-  - フィルタ: completed, keyword
+  - ユーザー選択: ドロップダウンでユーザーを選択してTodoを作成
+  - フィルタ: completed, keyword, userId
   - ソート: sortBy, sortDirection
+- `UsersPage`: ユーザー管理画面
 
 **型定義:**
-- バックエンドDTOと一致する型定義（Todo, User, AuthResponse等）
+- バックエンドDTOと一致する型定義（Todo, User, Request/Response型）
 - `import type { ... }` で型インポート（verbatimModuleSyntax対応）
 
 ## 環境変数

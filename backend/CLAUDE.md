@@ -21,11 +21,10 @@ backend/
     └── src/main/kotlin/com/example/todo/
         ├── TodoApiApplication.kt
         └── api/
-            ├── config/      # SecurityConfig.kt, GlobalExceptionHandler.kt, DataInitializer.kt
-            ├── controller/  # AuthController.kt, TodoController.kt
+            ├── config/      # WebConfig.kt, GlobalExceptionHandler.kt, DataInitializer.kt
+            ├── controller/  # UserController.kt, TodoController.kt
             ├── dto/         # Request/Response DTO
-            ├── mcp/         # TodoTools.kt (MCP Tools)
-            └── security/    # JwtTokenProvider.kt, JwtAuthenticationFilter.kt, CustomUserDetailsService.kt
+            └── mcp/         # TodoTools.kt (MCP Tools)
 ```
 
 ## アーキテクチャ
@@ -49,7 +48,7 @@ todo-api ───→ todo-domain ←─── todo-infrastructure
 ### ドメイン層（todo-domain）
 
 **ドメインモデル（Pure Domain Model）:**
-- `User`: id, username, password, createdAt, updatedAt
+- `User`: id, name, createdAt, updatedAt
   - JPAアノテーションなし、純粋なKotlin data class
 - `Todo`: id, title, dueDate, completed, user, createdAt, updatedAt
   - ドメインロジック: `toggle()`, `isOverdue()`
@@ -84,15 +83,13 @@ todo-api ───→ todo-domain ←─── todo-infrastructure
 
 ### アプリケーション層（todo-api）
 
-**セキュリティ:**
-- `SecurityConfig`: JWT設定、CORS、エンドポイント認可
-  - 公開: /api/auth/**, /h2-console/**, /mcp/**
-  - 認証必須: 上記以外の全エンドポイント
-- `JwtTokenProvider`: トークン生成・検証、HS256、有効期限24時間
-- `JwtAuthenticationFilter`: リクエストヘッダーからトークン抽出・検証
+**設定:**
+- `WebConfig`: CORS設定（WebMvcConfigurer）
+  - 許可オリジン: localhost:3000, localhost:5173
+  - 全HTTPメソッド、全ヘッダーを許可
 
 **コントローラー:**
-- `AuthController`: POST /api/auth/register, /login, /logout
+- `UserController`: /api/users で全CRUD操作（作成、更新、削除、名前重複チェック）
 - `TodoController`: /api/todos で全CRUD + フィルタ・ソート対応
 
 **MCP (Model Context Protocol):**
@@ -105,7 +102,7 @@ todo-api ───→ todo-domain ←─── todo-infrastructure
 
 **application.yml:**
 - H2インメモリDB（jdbc:h2:mem:tododb）
-- JWT secret/expiration設定
+- H2 Console有効化（/h2-console）
 - JPA: ddl-auto=create-drop（開発用）
 - MCP: protocol=STREAMABLE, transport=WEBMVC
 - EntityScan: com.example.todo.infrastructure.entity
