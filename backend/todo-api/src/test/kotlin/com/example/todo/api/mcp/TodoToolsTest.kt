@@ -4,21 +4,25 @@ import com.example.todo.domain.model.Todo
 import com.example.todo.domain.model.User
 import com.example.todo.domain.service.TodoFilter
 import com.example.todo.domain.service.TodoService
+import com.example.todo.domain.service.UserService
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 import org.mockito.kotlin.*
 import java.time.LocalDate
 
 class TodoToolsTest {
     private lateinit var todoService: TodoService
+    private lateinit var userService: UserService
     private lateinit var todoTools: TodoTools
     private lateinit var testUser: User
 
     @BeforeEach
     fun setup() {
         todoService = mock()
-        todoTools = TodoTools(todoService)
+        userService = mock()
+        todoTools = TodoTools(todoService, userService)
         testUser = User(id = 1L, name = "testuser")
     }
 
@@ -259,5 +263,94 @@ class TodoToolsTest {
         // Assert
         verify(todoService).findWithFilters(expectedFilter)
         assertEquals(3, result.size)
+    }
+
+    @Test
+    fun `createTodo should create a new todo with all parameters`() {
+        // Arrange
+        val userId = 1L
+        val title = "New Todo"
+        val dueDate = LocalDate.of(2026, 3, 15)
+
+        val expectedTodo = Todo(
+            id = 10L,
+            title = title,
+            dueDate = dueDate,
+            completed = false,
+            user = testUser,
+        )
+
+        whenever(userService.findById(userId)).thenReturn(testUser)
+        whenever(todoService.createTodo(testUser, title, dueDate)).thenReturn(expectedTodo)
+
+        // Act
+        val result = todoTools.createTodo(
+            userId = userId,
+            title = title,
+            dueDate = dueDate,
+        )
+
+        // Assert
+        verify(userService).findById(userId)
+        verify(todoService).createTodo(testUser, title, dueDate)
+        assertEquals(10L, result.id)
+        assertEquals(title, result.title)
+        assertEquals(dueDate, result.dueDate)
+        assertFalse(result.completed)
+    }
+
+    @Test
+    fun `createTodo should create a new todo without dueDate`() {
+        // Arrange
+        val userId = 1L
+        val title = "Todo without due date"
+
+        val expectedTodo = Todo(
+            id = 11L,
+            title = title,
+            dueDate = null,
+            completed = false,
+            user = testUser,
+        )
+
+        whenever(userService.findById(userId)).thenReturn(testUser)
+        whenever(todoService.createTodo(testUser, title, null)).thenReturn(expectedTodo)
+
+        // Act
+        val result = todoTools.createTodo(
+            userId = userId,
+            title = title,
+            dueDate = null,
+        )
+
+        // Assert
+        verify(userService).findById(userId)
+        verify(todoService).createTodo(testUser, title, null)
+        assertEquals(11L, result.id)
+        assertEquals(title, result.title)
+        assertNull(result.dueDate)
+        assertFalse(result.completed)
+    }
+
+    @Test
+    fun `createTodo should throw exception when user not found`() {
+        // Arrange
+        val userId = 999L
+        val title = "Test Todo"
+
+        whenever(userService.findById(userId)).thenReturn(null)
+
+        // Act & Assert
+        val exception = assertThrows<IllegalArgumentException> {
+            todoTools.createTodo(
+                userId = userId,
+                title = title,
+                dueDate = null,
+            )
+        }
+
+        verify(userService).findById(userId)
+        verify(todoService, never()).createTodo(any(), any(), any())
+        assertEquals("User with id $userId not found", exception.message)
     }
 }
